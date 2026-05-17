@@ -34,6 +34,7 @@
     </nav>
 
     <div class="music-player-wrapper">
+      <div class="music-tooltip" id="musicTooltip">Şarkıyı Çal ♪</div>
       <audio id="bgMusic" loop><source src="functions/Madrigal-Bir-Sevmek-Bin-Defa-Olmek-Demekmis-53.mp3" type="audio/mpeg" /></audio>
       <button id="musicToggleBtn" class="music-btn" title="Şarkıyı Başlat/Durdur" ><i class="fa-solid fa-play" id="musicIcon"></i><span id="musicText">Bizim Şarkımız</span></button>
     </div>
@@ -43,11 +44,11 @@
         <h1 class="hero-title">İbrahim & Umut</h1>
         <p class="hero-subtitle mb-5" id="typewriter-text"></p>
         <p class="theme-text-muted fw-medium mb-4"> Seninle yollarımızın kesiştiği o andan beri geçen süre: </p>
-        <div class="row justify-content-center">
-          <div class="col-3 col-md-2"> <div class="counter-box"> <div class="counter-number" id="days">00</div> <div class="counter-label">Gün</div> </div> </div>
-          <div class="col-3 col-md-2"> <div class="counter-box"> <div class="counter-number" id="hours">00</div> <div class="counter-label">Saat</div> </div> </div>
-          <div class="col-3 col-md-2"> <div class="counter-box"> <div class="counter-number" id="minutes">00</div> <div class="counter-label">Dakika</div> </div> </div>
-          <div class="col-3 col-md-2"> <div class="counter-box"> <div class="counter-number" id="seconds">00</div> <div class="counter-label">Saniye</div> </div> </div>
+        <div class="row justify-content-center g-3 px-2">
+          <div class="col-6 col-md-3 col-lg-2"> <div class="counter-box"> <div class="counter-number" id="days">00</div> <div class="counter-label">Gün</div> </div> </div>
+          <div class="col-6 col-md-3 col-lg-2"> <div class="counter-box"> <div class="counter-number" id="hours">00</div> <div class="counter-label">Saat</div> </div> </div>
+          <div class="col-6 col-md-3 col-lg-2"> <div class="counter-box"> <div class="counter-number" id="minutes">00</div> <div class="counter-label">Dakika</div> </div> </div>
+          <div class="col-6 col-md-3 col-lg-2"> <div class="counter-box"> <div class="counter-number" id="seconds">00</div> <div class="counter-label">Saniye</div> </div> </div>
         </div>
         <div class="mt-4 mt-md-5"> <p class="theme-text-muted" style="font-size: 1rem"> <i class="fa-regular fa-clock me-2"></i> 8 Eylül 2025 • 23:15 </p> </div>
       </div>
