@@ -186,7 +186,7 @@ h4 {
   min-height: 100vh;
   background-image:
     linear-gradient(var(--overlay), var(--overlay)),
-    url("https://github.com/fnyfexsworld/friend/blob/main/functions/image.jpeg");
+    url("https://raw.githubusercontent.com/fnyfexsworld/friend/refs/heads/main/functions/image.jpeg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
