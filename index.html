@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>İbrahim & Umut | Uzaktaki En Sevdiğim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+      /* --- KOYU TEMA (VARSAYILAN) --- */
+      :root {
+        --primary-bg: #0f172a;
+        --secondary-bg: #1e293b;
+        --accent-color: #d4af37;
+        --text-main: #ffffff;
+        --text-muted: #e2e8f0;
+        --overlay: rgba(15, 23, 42, 0.85);
+        --card-shadow: rgba(0, 0, 0, 0.5);
+        --btn-bg: rgba(255, 255, 255, 0.15);
+        --btn-color: #ffffff;
+        --nav-bg: rgba(15, 23, 42, 0.8);
+      }
+
+      /* --- AÇIK TEMA --- */
+      [data-theme="light"] {
+        --primary-bg: #f8fafc;
+        --secondary-bg: #ffffff;
+        --accent-color: #b48600;
+        --text-main: #0f172a;
+        --text-muted: #334155;
+        --overlay: rgba(248, 250, 252, 0.85);
+        --card-shadow: rgba(0, 0, 0, 0.08);
+        --btn-bg: rgba(15, 23, 42, 0.15);
+        --btn-color: #0f172a;
+        --nav-bg: rgba(248, 250, 252, 0.85);
+      }
+
+      /* --- PEMBE TEMA --- */
+      [data-theme="pink"] {
+        --primary-bg: #fdf2f8; 
+        --secondary-bg: #ffffff; 
+        --accent-color: #db2777; 
+        --text-main: #4a044e; 
+        --text-muted: #831843; 
+        --overlay: rgba(253, 242, 248, 0.85);
+        --card-shadow: rgba(219, 39, 119, 0.15);
+        --btn-bg: rgba(219, 39, 119, 0.1);
+        --btn-color: #db2777;
+        --nav-bg: rgba(253, 242, 248, 0.85);
+      }
+
+      /* Pembe Tema Özel Kalp İmleci */
+      [data-theme="pink"], [data-theme="pink"] * { cursor: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23db2777%22%20d%3D%22M12%2021.35l-1.45-1.32C5.4%2015.36%202%2012.28%202%208.5%202%205.42%204.42%203%207.5%203c1.74%200%203.41.81%204.5%202.09C13.09%203.81%2014.76%203%2016.5%203%2019.58%203%2022%205.42%2022%208.5c0%203.78-3.4%206.86-8.55%2011.54L12%2021.35z%22%2F%3E%3C%2Fsvg%3E') 12 12, auto !important; }
+      [data-theme="pink"] button, [data-theme="pink"] a, [data-theme="pink"] .nav-link, [data-theme="pink"] .theme-toggle, [data-theme="pink"] .music-btn { cursor: url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%239d174d%22%20d%3D%22M12%2021.35l-1.45-1.32C5.4%2015.36%202%2012.28%202%208.5%202%205.42%204.42%203%207.5%203c1.74%200%203.41.81%204.5%202.09C13.09%203.81%2014.76%203%2016.5%203%2019.58%203%2022%205.42%2022%208.5c0%203.78-3.4%206.86-8.55%2011.54L12%2021.35z%22%2F%3E%3C%2Fsvg%3E') 12 12, pointer !important; }
+
+      html { scroll-behavior: smooth; }
+      body { font-family: "Poppins", sans-serif; background-color: var(--primary-bg); color: var(--text-main); overflow-x: hidden; transition: background-color 0.5s ease, color 0.5s ease; }
+      section { scroll-margin-top: 70px; }
+      
+      h1, h2, h3, h4 { font-family: "Playfair Display", serif; color: var(--text-main); }
+      .theme-text-muted { color: var(--text-muted) !important; line-height: 1.8; font-size: 1.05rem; }
+      .section-title { text-align: center; margin-bottom: 3rem; color: var(--accent-color); font-weight: 700; position: relative; z-index: 2; }
+
+      /* --- NAVBAR --- */
+      .custom-navbar { background-color: var(--nav-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-bottom: 1px solid rgba(212, 175, 55, 0.2); transition: all 0.5s ease; }
+      .navbar-brand { font-family: "Playfair Display", serif; font-weight: 700; color: var(--accent-color) !important; font-size: 1.5rem; }
+      .nav-link { color: var(--text-main) !important; font-weight: 500; transition: color 0.3s ease; margin-left: 15px; }
+      .nav-link:hover, .nav-link.active { color: var(--accent-color) !important; }
+      .navbar-toggler { border: none; color: var(--text-main); }
+      .navbar-toggler:focus { box-shadow: none; }
+      
+      .theme-toggle { background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; margin-left: 15px; }
+      .theme-toggle:hover { background-color: var(--accent-color); color: var(--primary-bg); transform: scale(1.1); }
+
+      .music-player-wrapper { position: fixed; bottom: 25px; right: 25px; z-index: 999; transition: transform 0.3s ease; }
+      .music-player-wrapper:hover { transform: translateY(-5px); }
+      .music-btn { background-color: var(--secondary-bg); color: var(--accent-color); border: 1px solid var(--accent-color); padding: 12px 24px; border-radius: 30px; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 1rem; box-shadow: 0 10px 30px var(--card-shadow); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; backdrop-filter: blur(8px); }
+      .music-btn:hover { background-color: var(--accent-color); color: #fff; }
+      
+      .hero-section { min-height: 100vh; background-image: linear-gradient(var(--overlay), var(--overlay)), url("https://images.unsplash.com/photo-1529156069898-49953e39b3ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"); background-size: cover; background-position: center; background-attachment: fixed; display: flex; align-items: center; justify-content: center; text-align: center; padding-top: 60px; }
+      .hero-title { font-size: clamp(3rem, 6vw, 4.5rem); font-weight: 700; color: var(--accent-color); margin-bottom: 20px; }
+      .hero-subtitle { font-size: 1.5rem; font-weight: 400; color: var(--text-main); font-style: italic; min-height: 36px; }
+      #tw-cursor { color: var(--accent-color); font-weight: bold; animation: blink 1s infinite; }
+      @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+      .counter-box { background-color: var(--secondary-bg); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 20px; margin: 10px; transition: all 0.3s ease; box-shadow: 0 4px 15px var(--card-shadow); }
+      .counter-number { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; color: var(--accent-color); font-family: "Playfair Display", serif; }
+      .counter-label { font-size: clamp(0.8rem, 2vw, 1rem); text-transform: uppercase; color: var(--text-muted); font-weight: 500; }
+
+      .timeline-section { padding: 100px 0; background-color: var(--secondary-bg); transition: background-color 0.5s ease; position: relative; overflow: hidden; }
+      .galaxy-container { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+      .star { position: absolute; width: 3px; height: 3px; background: var(--accent-color); border-radius: 50%; animation: twinkle infinite alternate; }
+      .shooting-star { position: absolute; width: 120px; height: 2px; background: linear-gradient(90deg, var(--accent-color), transparent); border-radius: 50%; transform: rotate(-45deg); animation: shoot 1.5s linear forwards; opacity: 0; }
+      @keyframes twinkle { 0% { opacity: 0.1; transform: scale(0.8); } 100% { opacity: 0.8; transform: scale(1.5); box-shadow: 0 0 8px var(--accent-color); } }
+      @keyframes shoot { 0% { transform: rotate(-45deg) translateX(0); opacity: 1; } 100% { transform: rotate(-45deg) translateX(-400px); opacity: 0; } }
+
+      .messenger-mote { position: absolute; width: 8px; height: 8px; background-color: var(--accent-color); border-radius: 50%; filter: blur(1px); box-shadow: 0 0 8px var(--accent-color); pointer-events: none; opacity: 0; z-index: 5; animation: messageFloat 5s ease-out forwards; }
+      @keyframes messageFloat { 0% { transform: scale(1); opacity: 0; } 10% { opacity: 0.8; } 40% { transform: scale(1.5) translate(100px, -50px); opacity: 0.9; } 70% { transform: scale(0.8) translate(150px, -20px); opacity: 0.5; } 100% { transform: scale(0.1) translate(200px, 0px); opacity: 0; } }
+
+      .timeline-container-inner { position: relative; z-index: 2; }
+      .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+      .timeline-line { position: absolute; width: 2px; background-color: rgba(212, 175, 55, 0.2); top: 0; bottom: 0; left: 50%; margin-left: -1px; z-index: 1; }
+      .timeline-progress { position: absolute; width: 2px; background-color: var(--accent-color); top: 0; left: 50%; margin-left: -1px; height: 0%; z-index: 2; box-shadow: 0 0 10px var(--accent-color); transition: height 0.1s ease-out; }
+      .timeline-item { padding: 30px 40px; position: relative; width: 50%; z-index: 3; transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+      .timeline-item::after { content: ""; position: absolute; width: 16px; height: 16px; right: -8px; background-color: var(--primary-bg); border: 3px solid var(--accent-color); top: 35px; border-radius: 50%; z-index: 4; animation: pulse 2s infinite; }
+      @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); } 70% { box-shadow: 0 0 0 12px rgba(212, 175, 55, 0); } 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); } }
+      .timeline-item.left { left: 0; transform: translateX(-80px); opacity: 0; }
+      .timeline-item.right { left: 50%; transform: translateX(80px); opacity: 0; }
+      .timeline-item.right::after { left: -8px; }
+      .timeline-item.show { transform: translateX(0); opacity: 1; }
+      .timeline-content { padding: 20px 30px; background-color: var(--primary-bg); border-radius: 15px; border: 1px solid rgba(212, 175, 55, 0.2); transition: all 0.3s ease; box-shadow: 0 5px 15px var(--card-shadow); }
+      .timeline-content:hover { border-color: var(--accent-color); transform: translateY(-5px); box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15); }
+      .timeline-date { color: var(--accent-color); font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
+
+      .quotes-section { padding: 80px 0; background-color: var(--secondary-bg); transition: background-color 0.5s ease; }
+      .quote-box { text-align: center; padding: 40px; max-width: 700px; margin: 0 auto; }
+      .quote-icon { font-size: 3rem; color: var(--accent-color); margin-bottom: 20px; opacity: 0.5; }
+      .quote-text { font-size: clamp(1.2rem, 4vw, 1.8rem); font-family: "Playfair Display", serif; font-style: italic; margin-bottom: 20px; color: var(--text-main); }
+      .carousel-indicators [data-bs-target] { background-color: var(--accent-color); width: 10px; height: 10px; border-radius: 50%; margin: 0 5px; }
+
+      /* ==== ŞATAFATLI HARİTA BÖLÜMÜ ==== */
+      .map-section { padding: 100px 0; background-color: var(--primary-bg); transition: background-color 0.5s ease; position: relative; }
+      .map-wrapper { position: relative; width: 100%; max-width: 1000px; height: 500px; margin: 0 auto; border-radius: 20px; border: 2px solid rgba(212, 175, 55, 0.4); box-shadow: 0 10px 40px var(--card-shadow); overflow: hidden; background-color: #0b1120; }
+      #realMap { width: 100%; height: 100%; }
+      #animCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+      @media screen and (max-width: 768px) {
+        .navbar-collapse { background: var(--nav-bg); padding: 15px; border-radius: 10px; margin-top: 10px; border: 1px solid rgba(212, 175, 55, 0.2); }
+        .theme-toggle { margin-left: 0; margin-top: 10px; }
+        .music-player-wrapper { bottom: 15px; right: 15px; }
+        .music-btn { padding: 12px; border-radius: 50%; width: 50px; height: 50px; justify-content: center; }
+        .music-btn #musicText { display: none; }
+        .timeline-line, .timeline-progress { left: 31px; }
+        .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
+        .timeline-item::after { left: 23px; }
+        .timeline-item.left, .timeline-item.right { transform: translateX(-40px); left: 0; }
+        .map-wrapper { height: 400px; border-radius: 15px; }
+      }
+
+      .footer { background-color: var(--primary-bg); padding: 50px 0; text-align: center; border-top: 1px solid rgba(212, 175, 55, 0.2); }
+      .heart-icon { color: #dc3545; animation: heartbeat 1.5s infinite; }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md fixed-top custom-navbar">
+      <div class="container">
+        <a class="navbar-brand" href="#heroSection">Başlangıç</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <i class="fa-solid fa-bars" style="color: var(--accent-color);"></i>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav align-items-center">
+            <li class="nav-item"><a class="nav-link" href="#timelineSection">Hikayemiz</a></li>
+            <li class="nav-item"><a class="nav-link" href="#quotesSection">Ondan Kalanlar</a></li>
+            <li class="nav-item"><a class="nav-link" href="#mapSection">Harita</a></li>
+            <li class="nav-item">
+              <button class="theme-toggle" id="themeToggleBtn" title="Görünümü Değiştir">
+                <i class="fa-solid fa-sun" id="themeIcon"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="music-player-wrapper">
+      <audio id="bgMusic" loop><source src="Madrigal-Bir-Sevmek-Bin-Defa-Olmek-Demekmis-53.mp3" type="audio/mpeg" /></audio>
+      <button id="musicToggleBtn" class="music-btn" title="Şarkıyı Başlat/Durdur" ><i class="fa-solid fa-play" id="musicIcon"></i><span id="musicText">Bizim Şarkımız</span></button>
+    </div>
+
+    <section class="hero-section" id="heroSection">
+      <div class="container hero-content">
+        <h1 class="hero-title">İbrahim & Umut</h1>
+        <p class="hero-subtitle mb-5" id="typewriter-text"></p>
+        <p class="theme-text-muted fw-medium mb-4"> Seninle yollarımızın kesiştiği o andan beri geçen süre: </p>
+        <div class="row justify-content-center">
+          <div class="col-3 col-md-2"> <div class="counter-box"> <div class="counter-number" id="days">00</div> <div class="counter-label">Gün</div> </div> </div>
+          <div class="col-3 col-md-2"> <div class="counter-box"> <div class="counter-number" id="hours">00</div> <div class="counter-label">Saat</div> </div> </div>
+          <div class="col-3 col-md-2"> <div class="counter-box"> <div class="counter-number" id="minutes">00</div> <div class="counter-label">Dakika</div> </div> </div>
+          <div class="col-3 col-md-2"> <div class="counter-box"> <div class="counter-number" id="seconds">00</div> <div class="counter-label">Saniye</div> </div> </div>
+        </div>
+        <div class="mt-4 mt-md-5"> <p class="theme-text-muted" style="font-size: 1rem"> <i class="fa-regular fa-clock me-2"></i> 8 Eylül 2025 • 23:15 </p> </div>
+      </div>
+    </section>
+
+    <section class="timeline-section" id="timelineSection">
+      <div class="galaxy-container" id="galaxy"></div>
+      <div id="messageContainer" style="position: absolute; inset: 0; pointer-events: none; z-index: 4;"></div>
+      <div class="container timeline-container-inner">
+        <h2 class="section-title">Hikayemiz</h2>
+        <div class="timeline" id="timelineCore">
+          <div class="timeline-line"></div>
+          <div class="timeline-progress" id="timelineProgress"></div>
+          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">8 Eylül 2025 • 23:15</div> <h4 class="mb-0">Tanışma</h4> <p class="theme-text-muted mt-2 mb-0"> Her şeyin başladığı o ilk an. </p> </div> </div>
+          <div class="timeline-item right"> <div class="timeline-content"> <div class="timeline-date">11 Eylül 2025 • 10:10</div> <h4 class="mb-0">Aynı Yurttayız</h4> <p class="theme-text-muted mt-2 mb-0"> Aynı yurtta olduğumuzu öğrendiğimiz o şaşkınlık anı. </p> </div> </div>
+          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">22 Eylül 2025 • 10:48</div> <h4 class="mb-0">Muafiyet Sevinci</h4> <p class="theme-text-muted mt-2 mb-0"> İngilizce muafiyet sonuçlarının açıklanması. </p> </div> </div>
+          <div class="timeline-item right"> <div class="timeline-content"> <div class="timeline-date">26 Eylül 2025 • 17:35</div> <h4 class="mb-0">Ufak Bir Jest</h4> <p class="theme-text-muted mt-2 mb-0"> Bana o uçlu kalemi aldığın an. Küçük ama değerli. </p> </div> </div>
+          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">10 Ekim 2025 • 22:42</div> <h4 class="mb-0">İlk Dertleşme</h4> <p class="theme-text-muted mt-2 mb-0"> Birbirimize güvenip özelimi anlattığımız o gün, ayrıca ilk çay içişimiz. </p> </div> </div>
+          <div class="timeline-item right"> <div class="timeline-content"> <div class="timeline-date">23 Ekim 2025 • 21:56</div> <h4 class="mb-0">İlk Ayrılık</h4> <p class="theme-text-muted mt-2 mb-0"> Memlekete ilk gidişim ve kısa süreli vedalaşmamız. </p> </div> </div>
+          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">31 Ekim 2025 • 21:25</div> <h4 class="mb-0">Dile Gelenler</h4> <p class="theme-text-muted mt-2 mb-0"> İlk kez seni sevdiğimi söylediğim an. </p> </div> </div>
+          <div class="timeline-item right"> <div class="timeline-content"> <div class="timeline-date">2 Kasım 2025 • 13:58</div> <h4 class="mb-0">Sosyal Medyasal</h4> <p class="theme-text-muted mt-2 mb-0"> Postumu ilk kez beğendiğin o an :) </p> </div> </div>
+          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">10 Kasım 2025 • 09:18</div> <h4 class="mb-0">Unutulmaz Cümle</h4> <p class="theme-text-muted mt-2 mb-0"> "Senin umudun benim, beni yitirme." <i>- Umut</i> <br />"Senden başka umudum kalmadı." <i>- İbrahim</i> </p> </div> </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="quotes-section" id="quotesSection">
+      <div class="container">
+        <h2 class="section-title">Ondan Kalanlar</h2>
+        <div id="quotesCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true" >
+          <div class="carousel-inner">
+            <div class="carousel-item active"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text"> "Senin umudun benim, beni yitirme." </div> </div> </div>
+            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Kuzen."</div> </div> </div>
+            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Sapsik."</div> </div> </div>
+            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Seviyorum tabi."</div> </div> </div>
+            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Umut'um."</div> </div> </div>
+            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Kendine dikkat et."</div> </div> </div>
+            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text"> "İyiki doğmuşsun, doğum günün kutlu olsun." </div> <p class="theme-text-muted mt-3" style="font-size: 0.9rem"> — 26 Mart </p> </div> </div>
+            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"İyiki varsın."</div> </div> </div>
+            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Hoş geldin."</div> </div> </div>
+          </div>
+          <div class="carousel-indicators" style="bottom: -20px">
+            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="2"></button>
+            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="3"></button>
+            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="4"></button>
+            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="5"></button>
+            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="6"></button>
+            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="7"></button>
+            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="8"></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="map-section" id="mapSection">
+      <div class="container">
+        <h2 class="section-title">Yönümüz Hep Aynı</h2>
+        <p class="theme-text-muted text-center max-width-700 mx-auto mb-5">
+          Bir anlığına o yollar birleşmiş gibi hissetsek de, parçalanıp hiçe dönse de... <br>
+          Dostluğumuzun pusulası hep birbirimizi gösterecek.
+        </p>
+        <div class="map-wrapper" id="mapWrapper">
+          <div id="realMap"></div>
+          <canvas id="animCanvas"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <h4 class="mb-3" style="color: var(--accent-color)"> İyi ki varsın, en iyi dostum. </h4>
+        <p class="theme-text-muted mb-0 fw-medium"> Sevgiyle, Umut <i class="fa-solid fa-heart heart-icon ms-1"></i> </p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+      const isMobile = window.innerWidth <= 768;
+
+      // 1. DAKTİLO
+      const subtitleContainer = document.getElementById("typewriter-text");
+      const textToType = '"Uzaktaki en sevdiğim dostuma..."';
+      subtitleContainer.innerHTML = '<span id="tw-text"></span><span id="tw-cursor">|</span>';
+      const twText = document.getElementById("tw-text"); let typeIndex = 0;
+      function typeWriter() { if (typeIndex < textToType.length) { twText.textContent += textToType.charAt(typeIndex); typeIndex++; setTimeout(typeWriter, 60); } }
+      setTimeout(typeWriter, 800);
+
+      // 2. GALAKSİ & MESAJLAR
+      const galaxy = document.getElementById("galaxy");
+      const starCount = isMobile ? 30 : 80;
+      for (let i = 0; i < starCount; i++) {
+        let star = document.createElement("div"); star.className = "star";
+        star.style.left = `${Math.random() * 100}%`; star.style.top = `${Math.random() * 100}%`;
+        star.style.animationDuration = `${Math.random() * 2 + 1}s`; star.style.animationDelay = `${Math.random() * 2}s`;
+        galaxy.appendChild(star);
+      }
+      function createShootingStar() {
+        let sStar = document.createElement("div"); sStar.className = "shooting-star";
+        sStar.style.left = `${Math.random() * 100}%`; sStar.style.top = `${Math.random() * 40}%`;
+        galaxy.appendChild(sStar); setTimeout(() => { sStar.remove(); }, 1500);
+        setTimeout(createShootingStar, Math.random() * 4000 + (isMobile ? 4000 : 2000));
+      }
+      setTimeout(createShootingStar, 2000);
+
+      const messageContainer = document.getElementById("messageContainer");
+      function createRandomMessage() {
+        if (!messageContainer) return;
+        const mote = document.createElement("div"); mote.className = "messenger-mote";
+        mote.style.left = `${Math.random() * 100}%`; mote.style.top = `${15 + Math.random() * 30}%`;
+        mote.style.animationDelay = `${Math.random() * 2}s`; messageContainer.appendChild(mote);
+        setTimeout(() => { mote.remove(); }, 5000); setTimeout(createRandomMessage, 3000 + Math.random() * 5000);
+      }
+      setTimeout(createRandomMessage, 2000);
+
+      // 3. ANİMASYON & SCROLL
+      const timelineItems = document.querySelectorAll(".timeline-item");
+      const revealObserver = new IntersectionObserver((entries) => { entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add("show"); } }); }, { threshold: isMobile ? 0.05 : 0.2, rootMargin: isMobile ? "0px 0px 0px 0px" : "0px 0px -50px 0px" });
+      timelineItems.forEach((item) => revealObserver.observe(item));
+
+      const timelineCore = document.getElementById("timelineCore"); const timelineProgress = document.getElementById("timelineProgress");
+      window.addEventListener("scroll", () => {
+        const rect = timelineCore.getBoundingClientRect(); const viewportHeight = window.innerHeight;
+        let scrollPercentage = (viewportHeight / 1.5 - rect.top) / rect.height;
+        if (scrollPercentage < 0) scrollPercentage = 0; if (scrollPercentage > 1) scrollPercentage = 1;
+        timelineProgress.style.height = `${scrollPercentage * 100}%`;
+      });
+
+      // 4. TEMA GEÇİŞİ (Koyu -> Açık -> Pembe)
+      const themes = ['', 'light', 'pink'];
+      let currentThemeIndex = 0;
+      const themeBtn = document.getElementById("themeToggleBtn");
+      const themeIcon = document.getElementById("themeIcon");
+
+      themeBtn.addEventListener("click", () => {
+        currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+        const newTheme = themes[currentThemeIndex];
+        
+        if (newTheme === '') {
+          document.body.removeAttribute("data-theme");
+          themeIcon.className = "fa-solid fa-sun"; 
+        } else if (newTheme === 'light') {
+          document.body.setAttribute("data-theme", "light");
+          themeIcon.className = "fa-solid fa-heart"; 
+        } else if (newTheme === 'pink') {
+          document.body.setAttribute("data-theme", "pink");
+          themeIcon.className = "fa-solid fa-moon"; 
+        }
+      });
+      themeIcon.className = "fa-solid fa-sun";
+
+      const bgMusic = document.getElementById("bgMusic"); const musicToggleBtn = document.getElementById("musicToggleBtn"); const musicIcon = document.getElementById("musicIcon"); const musicText = document.getElementById("musicText"); let isPlaying = false;
+      musicToggleBtn.addEventListener("click", () => { if (isPlaying) { bgMusic.pause(); musicIcon.classList.remove("fa-pause"); musicIcon.classList.add("fa-play"); musicText.innerText = "Bizim Şarkımız"; } else { bgMusic.play(); musicIcon.classList.remove("fa-play"); musicIcon.classList.add("fa-pause"); musicText.innerText = "Çalıyor..."; } isPlaying = !isPlaying; });
+
+      function updateCounter() {
+        const startDate = new Date(2025, 8, 8, 23, 15, 0).getTime(); const diff = new Date().getTime() - startDate;
+        if (diff > 0) { document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24)); document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, "0"); document.getElementById("minutes").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, "0"); document.getElementById("seconds").innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, "0"); }
+      }
+      setInterval(updateCounter, 1000); updateCounter();
+
+      // ==== 5. ÇİZİLEN KIRMIZI ROTA ÜZERİNDEN HARİTA ANİMASYONU ====
+      
+      // Kullanıcının attığı 2. görsele birebir sadık kalınarak oluşturulmuş kırmızı yol koordinatları
+      const routeKirmizi = [
+        [36.929111, 30.629750], // İbrahim'in Evi
+        [36.9100, 30.6200],     // Güneye iniş
+        [36.8800, 30.6100],     // En güney ucu (kıvrım / U-dönüşü başlangıcı)
+        [36.8880, 30.6350],     // Doğuya toparlanma
+        [36.8920, 30.6600],     // ANTALYA yazısının tam üstü
+        [36.9020, 30.6900],     // Kepez hizası yukarı çıkış
+        [36.9050, 30.7100],     // Kepez sonrası dalga
+        [36.8850, 30.7300],     // Aksu'dan önceki derin çukur
+        [36.9100, 30.7550],     // Yukarı tırmanış
+        [36.9400, 30.7850],     // Aksu'ya giriş
+        [36.9430, 30.8200],     // Aksu D400
+        [36.9380, 30.8500],
+        [36.9300, 30.8900],
+        [36.9220, 30.9300],
+        [36.9180, 30.9700],     // Serik
+        [36.9120, 31.0200],
+        [36.9000, 31.0800],
+        [36.8850, 31.1400],
+        [36.8650, 31.2000],     // Serik sonrası aşağı inen kavis
+        [36.8500, 31.2500],
+        [36.846025, 31.319648]  // Umut'un Evi
+      ];
+
+      const centerLat = (routeKirmizi[0][0] + routeKirmizi[routeKirmizi.length-1][0]) / 2;
+      const centerLng = (routeKirmizi[0][1] + routeKirmizi[routeKirmizi.length-1][1]) / 2;
+
+      const map = L.map('realMap', { zoomControl: false }).setView([centerLat, centerLng], isMobile ? 9 : 10);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
+
+      L.circleMarker(routeKirmizi[0], { color: '#dc3545', fillColor: '#dc3545', fillOpacity: 0.9, radius: 8 }).addTo(map).bindTooltip("İbrahim'in Evi", { permanent: !isMobile, direction: 'left', className: 'fw-bold' });
+      L.circleMarker(routeKirmizi[routeKirmizi.length-1], { color: '#0d6efd', fillColor: '#0d6efd', fillOpacity: 0.9, radius: 8 }).addTo(map).bindTooltip("Umut'un Evi", { permanent: !isMobile, direction: 'right', className: 'fw-bold' });
+
+      // Rota yüzdelik dilimlerini hesapla (kıvrımların kusursuz çalışması için)
+      let totalDist = 0;
+      let routeData = [];
+      for(let i=0; i<routeKirmizi.length-1; i++){ totalDist += map.distance(routeKirmizi[i], routeKirmizi[i+1]); }
+      let currentDist = 0;
+      routeData.push({ latLng: routeKirmizi[0], pct: 0 });
+      for(let i=0; i<routeKirmizi.length-1; i++){
+         currentDist += map.distance(routeKirmizi[i], routeKirmizi[i+1]);
+         routeData.push({ latLng: routeKirmizi[i+1], pct: currentDist / totalDist });
+      }
+
+      function getLatLngAtPct(pct) {
+        if(pct <= 0) return routeData[0].latLng;
+        if(pct >= 1) return routeData[routeData.length-1].latLng;
+        for(let i=0; i<routeData.length-1; i++) {
+          if(pct >= routeData[i].pct && pct <= routeData[i+1].pct) {
+             let segmentPct = (pct - routeData[i].pct) / (routeData[i+1].pct - routeData[i].pct);
+             let lat = routeData[i].latLng[0] + (routeData[i+1].latLng[0] - routeData[i].latLng[0]) * segmentPct;
+             let lng = routeData[i].latLng[1] + (routeData[i+1].latLng[1] - routeData[i].latLng[1]) * segmentPct;
+             return [lat, lng];
+          }
+        }
+      }
+
+      // Canvas
+      const canvas = document.getElementById("animCanvas");
+      const ctx = canvas.getContext("2d");
+      function resizeCanvas() { canvas.width = document.getElementById("mapWrapper").clientWidth; canvas.height = document.getElementById("mapWrapper").clientHeight; }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      let phase = "APPROACH"; 
+      let t = 0;
+      let particles = [];
+      let smokeParticles = [];
+      let voidOpacity = 0;
+
+      class Shard {
+        constructor(x, y, isSpark) {
+          this.x = x; this.y = y;
+          this.vx = (Math.random() - 0.5) * (isSpark ? 15 : 10);
+          this.vy = (Math.random() - 0.5) * (isSpark ? 15 : 10) - 2; 
+          this.life = 1.0; this.decay = Math.random() * 0.02 + 0.01;
+          this.isSpark = isSpark;
+          this.size = isSpark ? Math.random() * 3 + 1 : Math.random() * 8 + 3;
+          this.angle = Math.random() * Math.PI * 2; this.spin = (Math.random() - 0.5) * 0.4;
+        }
+        update() { this.x += this.vx; this.y += this.vy; this.vy += 0.3; this.vx *= 0.95; this.angle += this.spin; this.life -= this.decay; }
+        draw(ctx) {
+          ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.angle);
+          if (this.isSpark) { ctx.fillStyle = `rgba(255, 150, 0, ${this.life})`; ctx.shadowBlur = 10; ctx.shadowColor = "orange"; ctx.beginPath(); ctx.arc(0, 0, this.size, 0, Math.PI*2); ctx.fill();
+          } else { ctx.fillStyle = `rgba(212, 175, 55, ${this.life})`; ctx.beginPath(); ctx.moveTo(-this.size, -this.size); ctx.lineTo(this.size, -this.size/2); ctx.lineTo(0, this.size); ctx.closePath(); ctx.fill(); }
+          ctx.restore();
+        }
+      }
+
+      class Smoke {
+        constructor(x, y) {
+          this.x = x + (Math.random()-0.5)*10; this.y = y + (Math.random()-0.5)*10;
+          this.size = Math.random() * 15 + 10; this.life = 0.6; this.decay = Math.random() * 0.008 + 0.005; this.vy = -Math.random() * 0.3 - 0.1;
+        }
+        update() { this.y += this.vy; this.life -= this.decay; this.size += 0.1; }
+        draw(ctx) { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fillStyle = `rgba(15, 10, 20, ${this.life * 0.5})`; ctx.shadowBlur = 10; ctx.shadowColor = "black"; ctx.fill(); }
+      }
+
+      function drawRouteSegment(ctx, startPct, endPct) {
+        let startLL = getLatLngAtPct(startPct);
+        let startPt = map.latLngToContainerPoint(startLL);
+        ctx.beginPath(); ctx.moveTo(startPt.x, startPt.y);
+        for(let i=0; i<routeData.length; i++) {
+          if(routeData[i].pct > startPct && routeData[i].pct < endPct) {
+             let pt = map.latLngToContainerPoint(routeData[i].latLng);
+             ctx.lineTo(pt.x, pt.y);
+          }
+        }
+        let endLL = getLatLngAtPct(endPct);
+        let endPt = map.latLngToContainerPoint(endLL);
+        ctx.lineTo(endPt.x, endPt.y);
+        ctx.stroke();
+      }
+
+      function drawLightningOnRoute(startPct, endPct, offsetAmount) {
+        let startLL = getLatLngAtPct(startPct);
+        let startPt = map.latLngToContainerPoint(startLL);
+        ctx.beginPath(); ctx.moveTo(startPt.x, startPt.y);
+        
+        let steps = 15; 
+        for(let i=1; i<steps; i++) {
+           let currentPct = startPct + (endPct - startPct) * (i/steps);
+           let ptLL = getLatLngAtPct(currentPct);
+           let pt = map.latLngToContainerPoint(ptLL);
+           ctx.lineTo(pt.x + (Math.random()-0.5)*offsetAmount, pt.y + (Math.random()-0.5)*offsetAmount);
+        }
+        let endLL = getLatLngAtPct(endPct);
+        let endPt = map.latLngToContainerPoint(endLL);
+        ctx.lineTo(endPt.x, endPt.y);
+        ctx.stroke();
+      }
+
+      function animateCanvas() {
+        requestAnimationFrame(animateCanvas);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (phase === "APPROACH") {
+          t += (isMobile ? 0.004 : 0.003); 
+
+          ctx.shadowBlur = 15; ctx.shadowColor = "#d4af37";
+          ctx.lineWidth = isMobile ? 3 : 5; ctx.strokeStyle = "#d4af37";
+          
+          drawRouteSegment(ctx, 0, t); // İbrahim'den gelen kısım
+          drawRouteSegment(ctx, 1.0 - t, 1.0); // Umut'tan gelen kısım
+          
+          if (t >= 0.50) { phase = "TENSION"; t = 0; } 
+        
+        } else if (phase === "TENSION") {
+          t += 0.02; 
+          
+          ctx.save(); ctx.translate((Math.random()-0.5)*4, (Math.random()-0.5)*4); 
+
+          ctx.shadowBlur = 30; ctx.shadowColor = "white";
+          ctx.lineWidth = 6; ctx.strokeStyle = `rgba(255, 255, 255, ${Math.random()*0.5 + 0.5})`;
+          drawLightningOnRoute(0, 1.0, 15); 
+
+          ctx.restore();
+
+          if (t >= 1) { 
+            phase = "SHATTER"; t = 0; voidOpacity = 0.5; 
+            
+            let midLL = getLatLngAtPct(0.5);
+            let midPt = map.latLngToContainerPoint(midLL);
+
+            for(let i=0; i<60; i++) {
+              let spawnX = midPt.x + (Math.random()-0.5)*50; 
+              let spawnY = midPt.y + (Math.random()-0.5)*50;
+              particles.push(new Shard(spawnX, spawnY, false)); 
+              particles.push(new Shard(spawnX, spawnY, true));  
+              if(i % 8 === 0) smokeParticles.push(new Smoke(spawnX, spawnY)); 
+            }
+          }
+
+        } else if (phase === "SHATTER") {
+          if (t < 0.2) {
+            ctx.shadowBlur = 20; ctx.shadowColor = "#ff4500"; ctx.lineWidth = 3; ctx.strokeStyle = "#ff4500";
+            for(let i=0; i<3; i++) drawLightningOnRoute(0, 1.0, 80); 
+          }
+          t += 0.01;
+
+          for(let i = particles.length - 1; i >= 0; i--) {
+            particles[i].update(); particles[i].draw(ctx);
+            if(particles[i].life <= 0) particles.splice(i, 1);
+          }
+          for(let i = smokeParticles.length - 1; i >= 0; i--) {
+            smokeParticles[i].update(); smokeParticles[i].draw(ctx);
+            if(smokeParticles[i].life <= 0) smokeParticles.splice(i, 1);
+          }
+
+          drawVoidScar(voidOpacity);
+
+          if (particles.length === 0 && smokeParticles.length === 0) { phase = "VOID"; }
+        
+        } else if (phase === "VOID") {
+          drawVoidScar(voidOpacity);
+          voidOpacity -= 0.003; 
+          if (voidOpacity <= 0) { phase = "APPROACH"; t = 0; } 
+        }
+      }
+
+      function drawVoidScar(opacity) {
+        ctx.save();
+        ctx.lineCap = "round";
+        ctx.shadowBlur = 15; ctx.shadowColor = "rgba(0,0,0,0.5)";
+        ctx.lineWidth = 8; ctx.strokeStyle = `rgba(15, 5, 20, ${opacity})`;
+        
+        let startPt = map.latLngToContainerPoint(routeData[0].latLng);
+        ctx.beginPath(); ctx.moveTo(startPt.x, startPt.y);
+        
+        for(let i=1; i<100; i++) {
+           let ptLL = getLatLngAtPct(i/100);
+           let pt = map.latLngToContainerPoint(ptLL);
+           ctx.lineTo(pt.x + (Math.sin(i)*2), pt.y + (Math.cos(i)*2));
+        }
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      const mapSection = document.getElementById("mapSection");
+      let mapStarted = false;
+      const mapObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !mapStarted) {
+            mapStarted = true; map.invalidateSize(); resizeCanvas();
+            animateCanvas(); 
+          }
+        });
+      }, { threshold: 0.2 });
+      mapObserver.observe(mapSection);
+
+    </script>
+  </body>
+</html>
