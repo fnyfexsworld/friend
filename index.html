@@ -4,29 +4,62 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>İbrahim & Umut | Uzaktaki En Sevdiğim'e</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <link rel="stylesheet" href="functions/style.css"/>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <link rel="stylesheet" href="functions/style.css" />
   </head>
   <body>
     <nav class="navbar navbar-expand-md fixed-top custom-navbar">
-      <div class="container">
+      <div
+        class="container d-flex flex-wrap align-items-center justify-content-between"
+      >
         <a class="navbar-brand" href="#heroSection">Başlangıç</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-          <i class="fa-solid fa-bars" style="color: var(--accent-color);"></i>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+
+        <div class="d-flex align-items-center order-md-3">
+          <button
+            class="theme-toggle me-3 me-md-0 ms-md-4"
+            id="themeToggleBtn"
+            title="Görünümü Değiştir"
+          >
+            <i class="fa-solid fa-sun" id="themeIcon"></i>
+          </button>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+          >
+            <i class="fa-solid fa-bars" style="color: var(--accent-color)"></i>
+          </button>
+        </div>
+
+        <div
+          class="collapse navbar-collapse justify-content-end order-md-2"
+          id="navbarNav"
+        >
           <ul class="navbar-nav align-items-center">
-            <li class="nav-item"><a class="nav-link" href="#timelineSection">Hikayemiz</a></li>
-            <li class="nav-item"><a class="nav-link" href="#quotesSection">Ondan Kalanlar</a></li>
-            <li class="nav-item"><a class="nav-link" href="#mapSection">Harita</a></li>
             <li class="nav-item">
-              <button class="theme-toggle" id="themeToggleBtn" title="Görünümü Değiştir">
-                <i class="fa-solid fa-sun" id="themeIcon"></i>
-              </button>
+              <a class="nav-link" href="#timelineSection">Hikayemiz</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#quotesSection">Ondan Kalanlar</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#mapSection">Harita</a>
             </li>
           </ul>
         </div>
@@ -34,93 +67,430 @@
     </nav>
 
     <div class="music-player-wrapper">
-      <audio id="bgMusic" loop><source src="functions/Madrigal-Bir-Sevmek-Bin-Defa-Olmek-Demekmis-53.mp3" type="audio/mpeg" /></audio>
-      <button id="musicToggleBtn" class="music-btn" title="Şarkıyı Başlat/Durdur"><i class="fa-solid fa-play" id="musicIcon"></i><span id="musicText">Bizim Şarkımız</span></button>
+      <audio id="bgMusic" loop>
+        <source
+          src="functions/Madrigal-Bir-Sevmek-Bin-Defa-Olmek-Demekmis-53.mp3"
+          type="audio/mpeg"
+        />
+      </audio>
+      <button
+        id="musicToggleBtn"
+        class="music-btn"
+        title="Şarkıyı Başlat/Durdur"
+      >
+        <i class="fa-solid fa-play" id="musicIcon"></i
+        ><span id="musicText">Bizim Şarkımız</span>
+      </button>
     </div>
 
     <section class="hero-section" id="heroSection">
       <div class="container hero-content">
         <h1 class="hero-title">İbrahim & Umut</h1>
         <p class="hero-subtitle mb-5" id="typewriter-text"></p>
-        <p class="theme-text-muted fw-medium mb-4"> Seninle yollarımızın kesiştiği o andan beri geçen süre: </p>
+        <p class="theme-text-muted fw-medium mb-4">
+          Seninle yollarımızın kesiştiği o andan beri geçen süre:
+        </p>
         <div class="row justify-content-center g-3 px-2">
-          <div class="col-6 col-md-3 col-lg-2"> <div class="counter-box"> <div class="counter-number" id="days">00</div> <div class="counter-label">Gün</div> </div> </div>
-          <div class="col-6 col-md-3 col-lg-2"> <div class="counter-box"> <div class="counter-number" id="hours">00</div> <div class="counter-label">Saat</div> </div> </div>
-          <div class="col-6 col-md-3 col-lg-2"> <div class="counter-box"> <div class="counter-number" id="minutes">00</div> <div class="counter-label">Dakika</div> </div> </div>
-          <div class="col-6 col-md-3 col-lg-2"> <div class="counter-box"> <div class="counter-number" id="seconds">00</div> <div class="counter-label">Saniye</div> </div> </div>
+          <div class="col-6 col-md-3 col-lg-2">
+            <div class="counter-box">
+              <div class="counter-number" id="days">00</div>
+              <div class="counter-label">Gün</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3 col-lg-2">
+            <div class="counter-box">
+              <div class="counter-number" id="hours">00</div>
+              <div class="counter-label">Saat</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3 col-lg-2">
+            <div class="counter-box">
+              <div class="counter-number" id="minutes">00</div>
+              <div class="counter-label">Dakika</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3 col-lg-2">
+            <div class="counter-box">
+              <div class="counter-number" id="seconds">00</div>
+              <div class="counter-label">Saniye</div>
+            </div>
+          </div>
         </div>
-        <div class="mt-4 mt-md-5"> <p class="theme-text-muted" style="font-size: 1rem"> <i class="fa-regular fa-clock me-2"></i> 8 Eylül 2025 • 23:15 / Daha dün gibi. </p> </div>
+        <div class="mt-4 mt-md-5">
+          <p class="theme-text-muted" style="font-size: 1rem">
+            <i class="fa-regular fa-clock me-2"></i> 8 Eylül 2025 • 23:15 / Daha
+            dün gibi.
+          </p>
+        </div>
       </div>
     </section>
 
     <section class="timeline-section" id="timelineSection">
       <div class="galaxy-container" id="galaxy"></div>
-      <div id="messageContainer" style="position: absolute; inset: 0; pointer-events: none; z-index: 4;"></div>
+      <div
+        id="messageContainer"
+        style="position: absolute; inset: 0; pointer-events: none; z-index: 4"
+      ></div>
       <div class="container timeline-container-inner">
-        <h2 class="section-title">Hikayemiz <br>2025 - 2026</h2>
+        <h2 class="section-title">Hikayemiz <br />2025 - 2026</h2>
         <div class="timeline" id="timelineCore">
           <div class="timeline-line"></div>
           <div class="timeline-progress" id="timelineProgress"></div>
-          
-          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">8 Eylül 2025 • 23:15</div> <h4 class="mb-0">Tanışma.</h4> <p class="theme-text-muted mt-2 mb-0"> Her şeyin başladığı o ilk an. </p> </div> </div>
-          <div class="timeline-item right"> <div class="timeline-content"> <div class="timeline-date">11 Eylül 2025 • 10:10</div> <h4 class="mb-0">Aynı Yurttayız!</h4> <p class="theme-text-muted mt-2 mb-0"> Aynı yurtta olduğumuzu öğrendiğimiz o şaşkınlık anı. </p> </div> </div>
-          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">22 Eylül 2025 • 10:48</div> <h4 class="mb-0">Muafiyeti Geçtik!</h4> <p class="theme-text-muted mt-2 mb-0"> İngilizce muafiyet sonuçlarının açıklanması. </p> </div> </div>
-          <div class="timeline-item right"> <div class="timeline-content"> <div class="timeline-date">26 Eylül 2025 • 17:35</div> <h4 class="mb-0">Ufak Bir Jest :)</h4> <p class="theme-text-muted mt-2 mb-0"> Bana o uçlu kalemi aldığın an. Küçük ama değerli. </p> </div> </div>
-          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">10 Ekim 2025 • 22:42</div> <h4 class="mb-0">İlk Dertleşme.</h4> <p class="theme-text-muted mt-2 mb-0"> Birbirimize güvenip özelimizi anlattığımız o gün, ayrıca ilk çay içişimiz. </p> </div> </div>
-          <div class="timeline-item right"> <div class="timeline-content"> <div class="timeline-date">23 Ekim 2025 • 21:56</div> <h4 class="mb-0">İlk Ayrılık. </h4> <p class="theme-text-muted mt-2 mb-0"> Memlekete ilk gidişim ve kısa süreli vedalaşmamız. </p> </div> </div>
-          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">31 Ekim 2025 • 21:25</div> <h4 class="mb-0">Dile Gelenler.</h4> <p class="theme-text-muted mt-2 mb-0"> İlk kez seni sevdiğimi söylediğim an. </p> </div> </div>
-          <div class="timeline-item right"> <div class="timeline-content"> <div class="timeline-date">2 Kasım 2025 • 13:58</div> <h4 class="mb-0">Sosyal Medyasal.</h4> <p class="theme-text-muted mt-2 mb-0"> Postumu ilk kez beğendiğin o an :) </p> </div> </div>
-          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">10 Kasım 2025 • 09:18</div> <h4 class="mb-0">Unutulmaz Cümle. <i class="fa-solid fa-heart heart-icon ms-1"></i></h4> <p class="theme-text-muted mt-2 mb-0"> "Senin umudun benim, beni yitirme." <i>- Umut</i> <br />"Senden başka umudum kalmadı." <i>- İbrahim</i> </p> </div> </div>
-          
-          <div class="timeline-item right"> <div class="timeline-content"> <div class="timeline-date">24 Aralık 2025 • 00:00</div> <h4 class="mb-0">Doğum Günü Jesti.</h4> <p class="theme-text-muted mt-2 mb-0"> İyi ki doğdun İbrahim. Nice benli yaşlara..</p> </div> </div>
-          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">12 Ocak 2026 • 01:00</div> <h4 class="mb-0">Yeniden Antalya!</h4> <p class="theme-text-muted mt-2 mb-0"> Antalya'ya 2. dönüş. </p> </div> </div>
-          <div class="timeline-item right"> <div class="timeline-content"> <div class="timeline-date">16 Ocak 2026 • 14:39</div> <h4 class="mb-0">Şehir Merkezi.</h4> <p class="theme-text-muted mt-2 mb-0"> Antalya Merkez'de ilk kez buluştuk. Antalya birlikte daha güzel.</p> </div> </div>
-          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">25 Ocak 2026 • 01:06</div> <h4 class="mb-0">Özel Alan.</h4> <p class="theme-text-muted mt-2 mb-0"> Privime hoş geldin İbrahim. </p> </div> </div>
-          <div class="timeline-item right"> <div class="timeline-content"> <div class="timeline-date">1 Şubat 2026 • 10:43</div> <h4 class="mb-0">Manavgat Hatırası.</h4> <p class="theme-text-muted mt-2 mb-0"> İbrahim Los Manavgat'ta. Piyasa şimdi başlıyor.</p> </div> </div>
-          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">24 Şubat 2026 • 00:00</div> <h4 class="mb-0">Mehmet'e Kutlama.</h4> <p class="theme-text-muted mt-2 mb-0"> Mehmet'in doğum gününü beraber kutladık.  </p> </div> </div>
-          <div class="timeline-item right"> <div class="timeline-content"> <div class="timeline-date">27 Şubat 2026 • 15:07</div> <h4 class="mb-0">Oda Nakli.</h4> <p class="theme-text-muted mt-2 mb-0"> İbrahim'in odasına nakil oldum. Hayat yaşanabilir hale geldi.</p> </div> </div>
-          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">9 Mart 2026 • 17:57</div> <h4 class="mb-0">Ankara Buluşması!</h4> <p class="theme-text-muted mt-2 mb-0"> İbrahim ile Ankara'da baş başa ilk buluşmamız. </p> </div> </div>
-          <div class="timeline-item right"> <div class="timeline-content"> <div class="timeline-date">12 Mart 2026 • 17:05</div> <h4 class="mb-0">Veda. :(</h4> <p class="theme-text-muted mt-2 mb-0"> İbrahim Antalya'ya gitti, ayrıldık. </p> </div> </div>
-          <div class="timeline-item left"> <div class="timeline-content"> <div class="timeline-date">26 Mart 2026 • 00:00</div> <h4 class="mb-0">Tam Vaktinde!</h4> <p class="theme-text-muted mt-2 mb-0"> Doğum günümü saniyesinde kutladı. En değer verdiğim şeyi yaptı.. </p> </div> </div>
-          <div class="timeline-item right"> <div class="timeline-content"> <div class="timeline-date">13 Mayıs 2026 • 23:43</div> <h4 class="mb-0">Gönül Bağı.. <i class="fa-solid fa-heart heart-icon ms-1"></i></h4> <p class="theme-text-muted mt-2 mb-0"> İbrahim dostum oldu. </p> </div> </div>
-          <h2 class="section-title">Şu anlık bir gelişme yok. <i class="fa-regular fa-face-kiss-wink-heart ms-1"></i></h2>
+
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <div class="timeline-date">8 Eylül 2025 • 23:15</div>
+              <h4 class="mb-0">Tanışma.</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                Her şeyin başladığı o ilk an.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item right">
+            <div class="timeline-content">
+              <div class="timeline-date">11 Eylül 2025 • 10:10</div>
+              <h4 class="mb-0">Aynı Yurttayız!</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                Aynı yurtta olduğumuzu öğrendiğimiz o şaşkınlık anı.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <div class="timeline-date">22 Eylül 2025 • 10:48</div>
+              <h4 class="mb-0">Muafiyeti Geçtik!</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                İngilizce muafiyet sonuçlarının açıklanması.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item right">
+            <div class="timeline-content">
+              <div class="timeline-date">26 Eylül 2025 • 17:35</div>
+              <h4 class="mb-0">Ufak Bir Jest :)</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                Bana o uçlu kalemi aldığın an. Küçük ama değerli.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <div class="timeline-date">10 Ekim 2025 • 22:42</div>
+              <h4 class="mb-0">İlk Dertleşme.</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                Birbirimize güvenip özelimizi anlattığımız o gün, ayrıca ilk çay
+                içişimiz.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item right">
+            <div class="timeline-content">
+              <div class="timeline-date">23 Ekim 2025 • 21:56</div>
+              <h4 class="mb-0">İlk Ayrılık.</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                Memlekete ilk gidişim ve kısa süreli vedalaşmamız.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <div class="timeline-date">31 Ekim 2025 • 21:25</div>
+              <h4 class="mb-0">Dile Gelenler.</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                İlk kez seni sevdiğimi söylediğim an.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item right">
+            <div class="timeline-content">
+              <div class="timeline-date">2 Kasım 2025 • 13:58</div>
+              <h4 class="mb-0">Sosyal Medyasal.</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                Postumu ilk kez beğendiğin o an :)
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <div class="timeline-date">10 Kasım 2025 • 09:18</div>
+              <h4 class="mb-0">
+                Unutulmaz Cümle.
+                <i class="fa-solid fa-heart heart-icon ms-1"></i>
+              </h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                "Senin umudun benim, beni yitirme." <i>- Umut</i> <br />"Senden
+                başka umudum kalmadı." <i>- İbrahim</i>
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item right">
+            <div class="timeline-content">
+              <div class="timeline-date">24 Aralık 2025 • 00:00</div>
+              <h4 class="mb-0">Doğum Günü Jesti.</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                İyi ki doğdun İbrahim. Nice benli yaşlara..
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <div class="timeline-date">12 Ocak 2026 • 01:00</div>
+              <h4 class="mb-0">Yeniden Antalya!</h4>
+              <p class="theme-text-muted mt-2 mb-0">Antalya'ya 2. dönüş.</p>
+            </div>
+          </div>
+          <div class="timeline-item right">
+            <div class="timeline-content">
+              <div class="timeline-date">16 Ocak 2026 • 14:39</div>
+              <h4 class="mb-0">Şehir Merkezi.</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                Antalya Merkez'de ilk kez buluştuk. Antalya birlikte daha güzel.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <div class="timeline-date">25 Ocak 2026 • 01:06</div>
+              <h4 class="mb-0">Özel Alan.</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                Privime hoş geldin İbrahim.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item right">
+            <div class="timeline-content">
+              <div class="timeline-date">1 Şubat 2026 • 10:43</div>
+              <h4 class="mb-0">Manavgat Hatırası.</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                İbrahim Los Manavgat'ta. Piyasa şimdi başlıyor.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <div class="timeline-date">24 Şubat 2026 • 00:00</div>
+              <h4 class="mb-0">Mehmet'e Kutlama.</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                Mehmet'in doğum gününü beraber kutladık.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item right">
+            <div class="timeline-content">
+              <div class="timeline-date">27 Şubat 2026 • 15:07</div>
+              <h4 class="mb-0">Oda Nakli.</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                İbrahim'in odasına nakil oldum. Hayat yaşanabilir hale geldi.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <div class="timeline-date">9 Mart 2026 • 17:57</div>
+              <h4 class="mb-0">Ankara Buluşması!</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                İbrahim ile Ankara'da baş başa ilk buluşmamız.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item right">
+            <div class="timeline-content">
+              <div class="timeline-date">12 Mart 2026 • 17:05</div>
+              <h4 class="mb-0">Veda. :(</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                İbrahim Antalya'ya gitti, ayrıldık.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item left">
+            <div class="timeline-content">
+              <div class="timeline-date">26 Mart 2026 • 00:00</div>
+              <h4 class="mb-0">Tam Vaktinde!</h4>
+              <p class="theme-text-muted mt-2 mb-0">
+                Doğum günümü saniyesinde kutladı. En değer verdiğim şeyi yaptı..
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item right">
+            <div class="timeline-content">
+              <div class="timeline-date">13 Mayıs 2026 • 23:43</div>
+              <h4 class="mb-0">
+                Gönül Bağı.. <i class="fa-solid fa-heart heart-icon ms-1"></i>
+              </h4>
+              <p class="theme-text-muted mt-2 mb-0">İbrahim dostum oldu.</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="quotes-section" id="quotesSection">
       <div class="container">
-        <h2 class="section-title">Ondan Kalanlar <i class="fa-solid fa-heart heart-icon ms-1"></i></h2>
-        <div id="quotesCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true" >
+        <h2 class="section-title">
+          Ondan Kalanlar <i class="fa-solid fa-heart heart-icon ms-1"></i>
+        </h2>
+        <div
+          id="quotesCarousel"
+          class="carousel slide"
+          data-bs-ride="carousel"
+          data-bs-touch="true"
+        >
           <div class="carousel-inner">
-            <div class="carousel-item active"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text"> "Sen benim umudumsun, kaybedemem." </div> </div> </div>
-            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Kuzen."</div> </div> </div>
-            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Sapsik."</div> </div> </div>
-            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Seviyorum tabi."</div> </div> </div>
-            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Umut'um."</div> </div> </div>
-            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Kendine dikkat et."</div> </div> </div>
-            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text"> "İyiki doğmuşsun, doğum günün kutlu olsun." </div> <p class="theme-text-muted mt-3" style="font-size: 0.9rem"> — 26 Mart </p> </div> </div>
-            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"İyiki varsın."</div> </div> </div>
-            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Hoş geldin."</div> </div> </div>
-            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Manitam olsa bu kadar özlemez."</div> </div> </div>
-            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Ya kiyamamm."</div> </div> </div>
-            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Her yol bir gün biter, her otobüs bir gün o duraktan geçer."</div> </div> </div>
-            <div class="carousel-item"> <div class="quote-box"> <i class="fa-solid fa-quote-left quote-icon"></i> <div class="quote-text">"Not için teşekkürler, anı kutumda saklayacağım."</div> </div> </div>
+            <div class="carousel-item active">
+              <div class="quote-box">
+                <i class="fa-solid fa-quote-left quote-icon"></i>
+                <div class="quote-text">"Sen benim umudumsun, kaybedemem."</div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="quote-box">
+                <i class="fa-solid fa-quote-left quote-icon"></i>
+                <div class="quote-text">"Kuzen."</div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="quote-box">
+                <i class="fa-solid fa-quote-left quote-icon"></i>
+                <div class="quote-text">"Sapsik."</div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="quote-box">
+                <i class="fa-solid fa-quote-left quote-icon"></i>
+                <div class="quote-text">"Seviyorum tabi."</div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="quote-box">
+                <i class="fa-solid fa-quote-left quote-icon"></i>
+                <div class="quote-text">"Umut'um."</div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="quote-box">
+                <i class="fa-solid fa-quote-left quote-icon"></i>
+                <div class="quote-text">"Kendine dikkat et."</div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="quote-box">
+                <i class="fa-solid fa-quote-left quote-icon"></i>
+                <div class="quote-text">
+                  "İyiki doğmuşsun, doğum günün kutlu olsun."
+                </div>
+                <p class="theme-text-muted mt-3" style="font-size: 0.9rem">
+                  — 26 Mart
+                </p>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="quote-box">
+                <i class="fa-solid fa-quote-left quote-icon"></i>
+                <div class="quote-text">"İyiki varsın."</div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="quote-box">
+                <i class="fa-solid fa-quote-left quote-icon"></i>
+                <div class="quote-text">"Hoş geldin."</div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="quote-box">
+                <i class="fa-solid fa-quote-left quote-icon"></i>
+                <div class="quote-text">"Manitam olsa bu kadar özlemez."</div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="quote-box">
+                <i class="fa-solid fa-quote-left quote-icon"></i>
+                <div class="quote-text">"Ya kiyamamm."</div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="quote-box">
+                <i class="fa-solid fa-quote-left quote-icon"></i>
+                <div class="quote-text">
+                  "Her yol bir gün biter, her otobüs bir gün o duraktan geçer."
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <div class="quote-box">
+                <i class="fa-solid fa-quote-left quote-icon"></i>
+                <div class="quote-text">
+                  "Not için teşekkürler, anı kutumda saklayacağım."
+                </div>
+              </div>
+            </div>
           </div>
           <div class="carousel-indicators" style="bottom: -20px">
-            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="0" class="active"></button>
-            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="1"></button>
-            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="2"></button>
-            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="3"></button>
-            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="4"></button>
-            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="5"></button>
-            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="6"></button>
-            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="7"></button>
-            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="8"></button>
-            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="9"></button>
-            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="10"></button>
-            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="11"></button>
-            <button type="button" data-bs-target="#quotesCarousel" data-bs-slide-to="12"></button>
+            <button
+              type="button"
+              data-bs-target="#quotesCarousel"
+              data-bs-slide-to="0"
+              class="active"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#quotesCarousel"
+              data-bs-slide-to="1"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#quotesCarousel"
+              data-bs-slide-to="2"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#quotesCarousel"
+              data-bs-slide-to="3"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#quotesCarousel"
+              data-bs-slide-to="4"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#quotesCarousel"
+              data-bs-slide-to="5"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#quotesCarousel"
+              data-bs-slide-to="6"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#quotesCarousel"
+              data-bs-slide-to="7"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#quotesCarousel"
+              data-bs-slide-to="8"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#quotesCarousel"
+              data-bs-slide-to="9"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#quotesCarousel"
+              data-bs-slide-to="10"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#quotesCarousel"
+              data-bs-slide-to="11"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#quotesCarousel"
+              data-bs-slide-to="12"
+            ></button>
           </div>
         </div>
       </div>
@@ -130,8 +500,10 @@
       <div class="container">
         <h2 class="section-title">Yönümüz Hep Aynı!</h2>
         <p class="theme-text-muted text-center max-width-700 mx-auto mb-5">
-          Bir anlığına o yollar birleşmiş gibi hissetsek de, parçalanıp hiçe dönse de... <br>
-          Dostluğumuzun pusulası hep birbirimizi gösterecek. Çünkü biz öyle istiyoruz.
+          Bir anlığına o yollar birleşmiş gibi hissetsek de, parçalanıp hiçe
+          dönse de... <br />
+          Dostluğumuzun pusulası hep birbirimizi gösterecek. Çünkü biz öyle
+          istiyoruz.
         </p>
         <div class="map-wrapper" id="mapWrapper">
           <div id="realMap"></div>
@@ -141,15 +513,24 @@
     </section>
 
     <footer class="footer text-center">
-      <div class="container d-flex flex-column align-items-center justify-content-center text-center">
-        <h4 class="mb-3 text-center" style="color: var(--accent-color)"> İyi ki varsın, kardeşim benim. </h4>
-        <p class="theme-text-muted mb-0 fw-medium text-center"> Sevgiyle, Umut <i class="fa-solid fa-heart heart-icon ms-1"></i> </p>
+      <div
+        class="container d-flex flex-column align-items-center justify-content-center text-center"
+      >
+        <h4 class="mb-3 text-center" style="color: var(--accent-color)">
+          İyi ki varsın, kardeşim benim.
+        </h4>
+        <p class="theme-text-muted mb-0 fw-medium text-center">
+          Sevgiyle, Umut <i class="fa-solid fa-heart heart-icon ms-1"></i>
+        </p>
       </div>
     </footer>
 
+    <button id="scrollDownBtn" class="scroll-down-btn" title="Aşağı Kaydır">
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
     <script src="functions/script.js"></script>
   </body>
 </html>
