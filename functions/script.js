@@ -35,7 +35,7 @@ function createRandomMessage() {
 }
 setTimeout(createRandomMessage, 2000);
 
-// 3. ANİMASYON & SCROLL (Mobil için rootMargin ayarlandı - aşağı kaydırdıkça belirgin çıkacak)
+// 3. ANİMASYON & SCROLL
 const timelineItems = document.querySelectorAll(".timeline-item");
 const revealObserver = new IntersectionObserver((entries) => { 
   entries.forEach((entry) => { 
@@ -80,12 +80,11 @@ themeBtn.addEventListener("click", () => {
 });
 themeIcon.className = "fa-solid fa-sun";
 
-// Müzik Çalar ve Tooltip Kontrolü
+// Müzik Çalar 
 const bgMusic = document.getElementById("bgMusic"); 
 const musicToggleBtn = document.getElementById("musicToggleBtn"); 
 const musicIcon = document.getElementById("musicIcon"); 
 const musicText = document.getElementById("musicText"); 
-const musicTooltip = document.getElementById("musicTooltip");
 let isPlaying = false;
 
 musicToggleBtn.addEventListener("click", () => { 
@@ -94,13 +93,11 @@ musicToggleBtn.addEventListener("click", () => {
     musicIcon.classList.remove("fa-pause"); 
     musicIcon.classList.add("fa-play"); 
     musicText.innerText = "Bizim Şarkımız"; 
-    if(musicTooltip) musicTooltip.classList.remove("hide-tooltip");
   } else { 
     bgMusic.play(); 
     musicIcon.classList.remove("fa-play"); 
     musicIcon.classList.add("fa-pause"); 
     musicText.innerText = "Çalıyor..."; 
-    if(musicTooltip) musicTooltip.classList.add("hide-tooltip");
   } 
   isPlaying = !isPlaying; 
 });
@@ -115,24 +112,24 @@ setInterval(updateCounter, 1000); updateCounter();
 
 const routeKirmizi = [
   [36.929111, 30.629750], // İbrahim'in Evi
-  [36.9100, 30.6200],     // Güneye iniş
-  [36.8800, 30.6100],     // En güney ucu (kıvrım / U-dönüşü başlangıcı)
-  [36.8880, 30.6350],     // Doğuya toparlanma
-  [36.8920, 30.6600],     // ANTALYA yazısının tam üstü
-  [36.9020, 30.6900],     // Kepez hizası yukarı çıkış
-  [36.9050, 30.7100],     // Kepez sonrası dalga
-  [36.8850, 30.7300],     // Aksu'dan önceki derin çukur
-  [36.9100, 30.7550],     // Yukarı tırmanış
-  [36.9400, 30.7850],     // Aksu'ya giriş
-  [36.9430, 30.8200],     // Aksu D400
+  [36.9100, 30.6200],     
+  [36.8800, 30.6100],     
+  [36.8880, 30.6350],     
+  [36.8920, 30.6600],     
+  [36.9020, 30.6900],     
+  [36.9050, 30.7100],     
+  [36.8850, 30.7300],     
+  [36.9100, 30.7550],     
+  [36.9400, 30.7850],     
+  [36.9430, 30.8200],     
   [36.9380, 30.8500],
   [36.9300, 30.8900],
   [36.9220, 30.9300],
-  [36.9180, 30.9700],     // Serik
+  [36.9180, 30.9700],     
   [36.9120, 31.0200],
   [36.9000, 31.0800],
   [36.8850, 31.1400],
-  [36.8650, 31.2000],     // Serik sonrası aşağı inen kavis
+  [36.8650, 31.2000],     
   [36.8500, 31.2500],
   [36.846025, 31.319648]  // Umut'un Evi
 ];
@@ -140,7 +137,17 @@ const routeKirmizi = [
 const centerLat = (routeKirmizi[0][0] + routeKirmizi[routeKirmizi.length-1][0]) / 2;
 const centerLng = (routeKirmizi[0][1] + routeKirmizi[routeKirmizi.length-1][1]) / 2;
 
-const map = L.map('realMap', { zoomControl: false }).setView([centerLat, centerLng], isMobile ? 9 : 10);
+// HARİTA ETKİLEŞİMLERİ KAPATILDI (Kilitleme işlemi)
+const map = L.map('realMap', { 
+  zoomControl: false,
+  dragging: false,
+  touchZoom: false,
+  doubleClickZoom: false,
+  scrollWheelZoom: false,
+  boxZoom: false,
+  keyboard: false,
+  tap: false
+}).setView([centerLat, centerLng], isMobile ? 9 : 10);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
 
 L.circleMarker(routeKirmizi[0], { color: '#dc3545', fillColor: '#dc3545', fillOpacity: 0.9, radius: 8 }).addTo(map).bindTooltip("İbrahim'in Evi", { permanent: !isMobile, direction: 'left', className: 'fw-bold' });
