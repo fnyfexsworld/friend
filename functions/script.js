@@ -137,7 +137,7 @@ const routeKirmizi = [
 const centerLat = (routeKirmizi[0][0] + routeKirmizi[routeKirmizi.length-1][0]) / 2;
 const centerLng = (routeKirmizi[0][1] + routeKirmizi[routeKirmizi.length-1][1]) / 2;
 
-// HARİTA ETKİLEŞİMLERİ KAPATILDI (Kilitleme işlemi)
+// HARİTA ETKİLEŞİMLERİ KAPATILDI
 const map = L.map('realMap', { 
   zoomControl: false,
   dragging: false,
@@ -149,6 +149,15 @@ const map = L.map('realMap', {
   tap: false
 }).setView([centerLat, centerLng], isMobile ? 9 : 10);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19 }).addTo(map);
+
+// EKSTRA GÜVENLİK: Harita metotlarını JS ile devre dışı bırakıyoruz.
+map.dragging.disable();
+map.touchZoom.disable();
+map.doubleClickZoom.disable();
+map.scrollWheelZoom.disable();
+map.boxZoom.disable();
+map.keyboard.disable();
+if (map.tap) map.tap.disable();
 
 L.circleMarker(routeKirmizi[0], { color: '#dc3545', fillColor: '#dc3545', fillOpacity: 0.9, radius: 8 }).addTo(map).bindTooltip("İbrahim'in Evi", { permanent: !isMobile, direction: 'left', className: 'fw-bold' });
 L.circleMarker(routeKirmizi[routeKirmizi.length-1], { color: '#0d6efd', fillColor: '#0d6efd', fillOpacity: 0.9, radius: 8 }).addTo(map).bindTooltip("Umut'un Evi", { permanent: !isMobile, direction: 'right', className: 'fw-bold' });
