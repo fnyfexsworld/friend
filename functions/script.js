@@ -35,9 +35,18 @@ function createRandomMessage() {
 }
 setTimeout(createRandomMessage, 2000);
 
-// 3. ANİMASYON & SCROLL
+// 3. ANİMASYON & SCROLL (Mobil için rootMargin ayarlandı - aşağı kaydırdıkça belirgin çıkacak)
 const timelineItems = document.querySelectorAll(".timeline-item");
-const revealObserver = new IntersectionObserver((entries) => { entries.forEach((entry) => { if (entry.isIntersecting) { entry.target.classList.add("show"); } }); }, { threshold: isMobile ? 0.05 : 0.2, rootMargin: isMobile ? "0px 0px 0px 0px" : "0px 0px -50px 0px" });
+const revealObserver = new IntersectionObserver((entries) => { 
+  entries.forEach((entry) => { 
+    if (entry.isIntersecting) { 
+      entry.target.classList.add("show"); 
+    } 
+  }); 
+}, { 
+  threshold: isMobile ? 0.1 : 0.2, 
+  rootMargin: isMobile ? "0px 0px -70px 0px" : "0px 0px -50px 0px" 
+});
 timelineItems.forEach((item) => revealObserver.observe(item));
 
 const timelineCore = document.getElementById("timelineCore"); const timelineProgress = document.getElementById("timelineProgress");
@@ -71,8 +80,30 @@ themeBtn.addEventListener("click", () => {
 });
 themeIcon.className = "fa-solid fa-sun";
 
-const bgMusic = document.getElementById("bgMusic"); const musicToggleBtn = document.getElementById("musicToggleBtn"); const musicIcon = document.getElementById("musicIcon"); const musicText = document.getElementById("musicText"); let isPlaying = false;
-musicToggleBtn.addEventListener("click", () => { if (isPlaying) { bgMusic.pause(); musicIcon.classList.remove("fa-pause"); musicIcon.classList.add("fa-play"); musicText.innerText = "Bizim Şarkımız"; } else { bgMusic.play(); musicIcon.classList.remove("fa-play"); musicIcon.classList.add("fa-pause"); musicText.innerText = "Çalıyor..."; } isPlaying = !isPlaying; });
+// Müzik Çalar ve Tooltip Kontrolü
+const bgMusic = document.getElementById("bgMusic"); 
+const musicToggleBtn = document.getElementById("musicToggleBtn"); 
+const musicIcon = document.getElementById("musicIcon"); 
+const musicText = document.getElementById("musicText"); 
+const musicTooltip = document.getElementById("musicTooltip");
+let isPlaying = false;
+
+musicToggleBtn.addEventListener("click", () => { 
+  if (isPlaying) { 
+    bgMusic.pause(); 
+    musicIcon.classList.remove("fa-pause"); 
+    musicIcon.classList.add("fa-play"); 
+    musicText.innerText = "Bizim Şarkımız"; 
+    if(musicTooltip) musicTooltip.classList.remove("hide-tooltip");
+  } else { 
+    bgMusic.play(); 
+    musicIcon.classList.remove("fa-play"); 
+    musicIcon.classList.add("fa-pause"); 
+    musicText.innerText = "Çalıyor..."; 
+    if(musicTooltip) musicTooltip.classList.add("hide-tooltip");
+  } 
+  isPlaying = !isPlaying; 
+});
 
 function updateCounter() {
   const startDate = new Date(2025, 8, 8, 23, 15, 0).getTime(); const diff = new Date().getTime() - startDate;
@@ -115,7 +146,6 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r
 L.circleMarker(routeKirmizi[0], { color: '#dc3545', fillColor: '#dc3545', fillOpacity: 0.9, radius: 8 }).addTo(map).bindTooltip("İbrahim'in Evi", { permanent: !isMobile, direction: 'left', className: 'fw-bold' });
 L.circleMarker(routeKirmizi[routeKirmizi.length-1], { color: '#0d6efd', fillColor: '#0d6efd', fillOpacity: 0.9, radius: 8 }).addTo(map).bindTooltip("Umut'un Evi", { permanent: !isMobile, direction: 'right', className: 'fw-bold' });
 
-// Rota yüzdelik dilimlerini hesapla
 let totalDist = 0;
 let routeData = [];
 for(let i=0; i<routeKirmizi.length-1; i++){ totalDist += map.distance(routeKirmizi[i], routeKirmizi[i+1]); }
@@ -139,7 +169,6 @@ function getLatLngAtPct(pct) {
   }
 }
 
-// Canvas
 const canvas = document.getElementById("animCanvas");
 const ctx = canvas.getContext("2d");
 function resizeCanvas() { canvas.width = document.getElementById("mapWrapper").clientWidth; canvas.height = document.getElementById("mapWrapper").clientHeight; }
