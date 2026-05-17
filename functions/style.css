@@ -63,10 +63,14 @@ h1, h2, h3, h4 { font-family: "Playfair Display", serif; color: var(--text-main)
 .theme-toggle { background: transparent; border: 1px solid var(--accent-color); color: var(--accent-color); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; margin-left: 15px; }
 .theme-toggle:hover { background-color: var(--accent-color); color: var(--primary-bg); transform: scale(1.1); }
 
+/* --- MUSIC PLAYER & TOOLTIP --- */
 .music-player-wrapper { position: fixed; bottom: 25px; right: 25px; z-index: 999; transition: transform 0.3s ease; }
 .music-player-wrapper:hover { transform: translateY(-5px); }
 .music-btn { background-color: var(--secondary-bg); color: var(--accent-color); border: 1px solid var(--accent-color); padding: 12px 24px; border-radius: 30px; font-family: "Poppins", sans-serif; font-weight: 500; font-size: 1rem; box-shadow: 0 10px 30px var(--card-shadow); transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; backdrop-filter: blur(8px); }
 .music-btn:hover { background-color: var(--accent-color); color: #fff; }
+
+.music-tooltip { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-10px); background-color: var(--accent-color); color: #fff; padding: 6px 14px; border-radius: 15px; font-size: 0.85rem; font-weight: 600; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+.music-tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: var(--accent-color) transparent transparent transparent; }
 
 .hero-section { min-height: 100vh; background-image: linear-gradient(var(--overlay), var(--overlay)), url("https://images.unsplash.com/photo-1529156069898-49953e39b3ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"); background-size: cover; background-position: center; background-attachment: fixed; display: flex; align-items: center; justify-content: center; text-align: center; padding-top: 60px; }
 .hero-title { font-size: clamp(3rem, 6vw, 4.5rem); font-weight: 700; color: var(--accent-color); margin-bottom: 20px; }
@@ -74,9 +78,10 @@ h1, h2, h3, h4 { font-family: "Playfair Display", serif; color: var(--text-main)
 #tw-cursor { color: var(--accent-color); font-weight: bold; animation: blink 1s infinite; }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-.counter-box { background-color: var(--secondary-bg); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 20px; margin: 10px; transition: all 0.3s ease; box-shadow: 0 4px 15px var(--card-shadow); }
-.counter-number { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; color: var(--accent-color); font-family: "Playfair Display", serif; }
-.counter-label { font-size: clamp(0.8rem, 2vw, 1rem); text-transform: uppercase; color: var(--text-muted); font-weight: 500; }
+/* Counter kutularından margin kaldırıldı, Bootstrap G-3 gap özelliği kullanılıyor */
+.counter-box { background-color: var(--secondary-bg); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 15px; padding: 15px 10px; transition: all 0.3s ease; box-shadow: 0 4px 15px var(--card-shadow); height: 100%; }
+.counter-number { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 700; color: var(--accent-color); font-family: "Playfair Display", serif; }
+.counter-label { font-size: clamp(0.75rem, 2vw, 1rem); text-transform: uppercase; color: var(--text-muted); font-weight: 500; margin-top: 5px; }
 
 .timeline-section { padding: 100px 0; background-color: var(--secondary-bg); transition: background-color 0.5s ease; position: relative; overflow: hidden; }
 .galaxy-container { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
@@ -98,7 +103,7 @@ h1, h2, h3, h4 { font-family: "Playfair Display", serif; color: var(--text-main)
 .timeline-item.left { left: 0; transform: translateX(-80px); opacity: 0; }
 .timeline-item.right { left: 50%; transform: translateX(80px); opacity: 0; }
 .timeline-item.right::after { left: -8px; }
-.timeline-item.show { transform: translateX(0); opacity: 1; }
+.timeline-item.show { transform: translateX(0) translateY(0); opacity: 1; }
 .timeline-content { padding: 20px 30px; background-color: var(--primary-bg); border-radius: 15px; border: 1px solid rgba(212, 175, 55, 0.2); transition: all 0.3s ease; box-shadow: 0 5px 15px var(--card-shadow); }
 .timeline-content:hover { border-color: var(--accent-color); transform: translateY(-5px); box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15); }
 .timeline-date { color: var(--accent-color); font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
@@ -109,24 +114,29 @@ h1, h2, h3, h4 { font-family: "Playfair Display", serif; color: var(--text-main)
 .quote-text { font-size: clamp(1.2rem, 4vw, 1.8rem); font-family: "Playfair Display", serif; font-style: italic; margin-bottom: 20px; color: var(--text-main); }
 .carousel-indicators [data-bs-target] { background-color: var(--accent-color); width: 10px; height: 10px; border-radius: 50%; margin: 0 5px; }
 
-/* ==== ŞATAFATLI HARİTA BÖLÜMÜ ==== */
 .map-section { padding: 100px 0; background-color: var(--primary-bg); transition: background-color 0.5s ease; position: relative; }
 .map-wrapper { position: relative; width: 100%; max-width: 1000px; height: 500px; margin: 0 auto; border-radius: 20px; border: 2px solid rgba(212, 175, 55, 0.4); box-shadow: 0 10px 40px var(--card-shadow); overflow: hidden; background-color: #0b1120; }
 #realMap { width: 100%; height: 100%; }
 #animCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
 
+/* ==== MOBİL GÖRÜNÜM AYARLARI ==== */
 @media screen and (max-width: 768px) {
   .navbar-collapse { background: var(--nav-bg); padding: 15px; border-radius: 10px; margin-top: 10px; border: 1px solid rgba(212, 175, 55, 0.2); }
   .theme-toggle { margin-left: 0; margin-top: 10px; }
+  
+  /* Müzik Butonu ve Tooltip Mobil */
   .music-player-wrapper { bottom: 15px; right: 15px; }
-  .music-btn { padding: 12px; border-radius: 50%; width: 50px; height: 50px; justify-content: center; }
+  .music-btn { padding: 12px; border-radius: 50%; width: 55px; height: 55px; justify-content: center; }
   .music-btn #musicText { display: none; }
-  .timeline-line, .timeline-progress { left: 31px; }
-  .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
-  .timeline-item::after { left: 23px; }
-  .timeline-item.left, .timeline-item.right { transform: translateX(-40px); left: 0; }
-  .map-wrapper { height: 400px; border-radius: 15px; }
-}
+  .music-tooltip { opacity: 1; animation: bounceTooltip 2s infinite; }
+  .music-tooltip.hide-tooltip { opacity: 0; animation: none; }
+  @keyframes bounceTooltip {
+    0%, 100% { transform: translateX(-50%) translateY(-10px); }
+    50% { transform: translateX(-50%) translateY(-18px); }
+  }
 
-.footer { background-color: var(--primary-bg); padding: 50px 0; text-align: center; border-top: 1px solid rgba(212, 175, 55, 0.2); }
-.heart-icon { color: #dc3545; animation: heartbeat 1.5s infinite; }
+  /* Hikayemiz - Timeline Mobil */
+  .timeline-line, .timeline-progress { left: 20px; } /* Çizgiyi sola yaklaştırdık */
+  .timeline-item { width: 100%; padding-left: 60px; padding-right: 15px; }
+  .timeline-item::after { left: 12px; } /* Noktayı çizgiye hizaladık */
+  .timeline-content { margin-left: 15px; } /* Kutular ile çizgi/
