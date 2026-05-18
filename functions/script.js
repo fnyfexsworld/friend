@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     themeIcon.className = "fa-solid fa-moon";
   }
 
-  // ==== MÜZİK ÇALAR (MOBİL VE SANİYE KORUMALI) ====
+  // ==== MÜZİK ÇALAR (MOBİL YÜKLENİYOR ANİMASYONLU) ====
   const bgMusic = document.getElementById("bgMusic");
   const musicToggleBtn = document.getElementById("musicToggleBtn");
   const musicIcon = document.getElementById("musicIcon");
@@ -17,45 +17,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (musicToggleBtn) {
     musicToggleBtn.addEventListener("click", () => {
-      if (!bgMusic) {
-        console.error("Müzik dosyası bulunamadı!");
-        return;
-      }
+      if (!bgMusic) return;
 
       if (isPlaying) {
         bgMusic.pause();
-        if (musicIcon) {
-          musicIcon.classList.remove("fa-pause");
-          musicIcon.classList.add("fa-play");
-        }
+        if (musicIcon) musicIcon.className = "fa-solid fa-play";
         isPlaying = false;
       } else {
-        // MOBİL İÇİN KUSURSUZ SANİYE ATLAMA MANTIĞI
-        if (isFirstPlay) {
-          const jumpToSeconds = 134; // 2 Dakika 14 Saniye
-          
-          // Eğer şarkı bilgisayardaki gibi önceden yüklendiyse:
-          if (bgMusic.readyState >= 1) {
-            bgMusic.currentTime = jumpToSeconds;
-          } else {
-            // Eğer telefondaki gibi henüz YÜKLENMEDİYSE, yüklenmesini bekle ve zıpla:
-            bgMusic.addEventListener('loadedmetadata', () => {
-              bgMusic.currentTime = jumpToSeconds;
-            }, { once: true });
-          }
-          isFirstPlay = false;
-        }
+        // MÜZİK YÜKLENİRKEN DÖNEN YÜKLENİYOR İKONU ÇIKAR
+        if (musicIcon) musicIcon.className = "fa-solid fa-spinner fa-spin";
 
-        // Şarkıyı Başlat
-        bgMusic.play().then(() => {
-          if (musicIcon) {
-            musicIcon.classList.remove("fa-play");
-            musicIcon.classList.add("fa-pause");
-          }
-          isPlaying = true;
-        }).catch((error) => {
-          console.log("Tarayıcı oynatmayı engelledi:", error);
-        });
+        if (isFirstPlay) {
+          // Mobil engellemesini aşmak için sesi 1 saliseliğine kısıp başlatıyoruz
+          bgMusic.muted = true; 
+          bgMusic.play().then(() => {
+            bgMusic.currentTime = 180; // 134. Saniyeye Atla
+            bgMusic.muted = false; // Sesi geri aç
+            
+            // Yüklendiğinde ikonu Duraklat (Pause) yap
+            if (musicIcon) musicIcon.className = "fa-solid fa-pause";
+            isPlaying = true;
+            isFirstPlay = false;
+          }).catch((err) => {
+            if (musicIcon) musicIcon.className = "fa-solid fa-play";
+            console.log(err);
+          });
+        } else {
+          // İlk çalma değilse normal devam et
+          bgMusic.play().then(() => {
+            if (musicIcon) musicIcon.className = "fa-solid fa-pause";
+            isPlaying = true;
+          });
+        }
       }
     });
   }
