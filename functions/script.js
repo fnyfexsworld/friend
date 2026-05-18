@@ -1,27 +1,61 @@
 document.addEventListener("DOMContentLoaded", () => {
   const isMobile = window.innerWidth <= 768;
 
-  // ==== MÜZİK ÇALAR ====
+  // Varsayılan Pembe Tema Zorunluluğu ve İkon Ayarı
+  document.body.setAttribute("data-theme", "pink");
+  const themeIcon = document.getElementById("themeIcon");
+  if (themeIcon) {
+    themeIcon.className = "fa-solid fa-moon";
+  }
+
+  // ==== MÜZİK ÇALAR (KESİN ÇÖZÜM - 2:14'TEN BAŞLAYAN) ====
   const bgMusic = document.getElementById("bgMusic");
   const musicToggleBtn = document.getElementById("musicToggleBtn");
   const musicIcon = document.getElementById("musicIcon");
-  const musicText = document.getElementById("musicText");
   let isPlaying = false;
+  let isFirstPlay = true;
 
-  if (musicToggleBtn && bgMusic) {
+  if (musicToggleBtn) {
+    // Tarayıcıya şarkıyı arka planda önceden yüklemesini emrediyoruz
+    if (bgMusic) bgMusic.preload = "auto";
+
     musicToggleBtn.addEventListener("click", () => {
+      if (!bgMusic) {
+        console.error("Müzik dosyası HTML içinde bulunamadı!");
+        return;
+      }
+
       if (isPlaying) {
         bgMusic.pause();
-        musicIcon.classList.remove("fa-pause");
-        musicIcon.classList.add("fa-play");
-        musicText.innerText = "Bizim Şarkımız";
+        if (musicIcon) {
+          musicIcon.classList.remove("fa-pause");
+          musicIcon.classList.add("fa-play");
+        }
+        isPlaying = false;
       } else {
-        bgMusic.play();
-        musicIcon.classList.remove("fa-play");
-        musicIcon.classList.add("fa-pause");
-        musicText.innerText = "Çalıyor...";
+        // Şarkıyı başlatmayı dener
+        let playPromise = bgMusic.play();
+
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              // ŞARKI BAŞARIYLA BAŞLADIĞI AN İSTEDİĞİMİZ SANİYEYE ATLIYORUZ
+              if (isFirstPlay) {
+                bgMusic.currentTime = 180; // 2 dakika 14 saniye (120+14)
+                isFirstPlay = false;
+              }
+            })
+            .catch((error) => {
+              console.log("Tarayıcı oynatmayı engelledi:", error);
+            });
+        }
+
+        if (musicIcon) {
+          musicIcon.classList.remove("fa-play");
+          musicIcon.classList.add("fa-pause");
+        }
+        isPlaying = true;
       }
-      isPlaying = !isPlaying;
     });
   }
 
@@ -137,10 +171,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const timelineCore = document.getElementById("timelineCore");
   const timelineProgress = document.getElementById("timelineProgress");
   const scrollDownBtn = document.getElementById("scrollDownBtn");
-  let isAtBottom = false; // Ok yönünü kontrol edeceğimiz değişken
+  let isAtBottom = false;
 
   window.addEventListener("scroll", () => {
-    // Timeline ilerleme barı
     if (timelineCore && timelineProgress) {
       const rect = timelineCore.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
@@ -150,7 +183,6 @@ document.addEventListener("DOMContentLoaded", () => {
       timelineProgress.style.height = `${scrollPercentage * 100}%`;
     }
 
-    // Scroll okunun yönünü (Aşağı/Yukarı) belirleme
     if (scrollDownBtn) {
       const scrollPosition = window.innerHeight + window.scrollY;
       const threshold = document.documentElement.scrollHeight - 50;
@@ -168,30 +200,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Ok butonuna tıklandığında ne olacağı
   if (scrollDownBtn) {
     scrollDownBtn.addEventListener("click", () => {
       if (isAtBottom) {
-        // En alttayken tıklanırsa en başa yumuşakça dön
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
+        window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
-        // Değilse ekranın %70'i kadar aşağı kaydır
-        window.scrollBy({
-          top: window.innerHeight * 0.7,
-          behavior: "smooth",
-        });
+        window.scrollBy({ top: window.innerHeight * 0.7, behavior: "smooth" });
       }
     });
   }
 
   // ==== TEMA GEÇİŞİ ====
-  const themes = ["", "light", "pink"];
+  const themes = ["pink", "", "light"]; // Pink'ten başlar
   let currentThemeIndex = 0;
   const themeBtn = document.getElementById("themeToggleBtn");
-  const themeIcon = document.getElementById("themeIcon");
 
   if (themeBtn && themeIcon) {
     themeBtn.addEventListener("click", () => {
@@ -209,41 +231,36 @@ document.addEventListener("DOMContentLoaded", () => {
         themeIcon.className = "fa-solid fa-moon";
       }
     });
-    themeIcon.className = "fa-solid fa-sun";
   }
+
+  // ==== ORTAK ROTA (HEM ANA HARİTA HEM GPS İÇİN) ====
+  const routeKirmizi = [
+    [36.929111, 30.62975],
+    [36.91, 30.62],
+    [36.88, 30.61],
+    [36.888, 30.635],
+    [36.892, 30.66],
+    [36.902, 30.69],
+    [36.905, 30.71],
+    [36.885, 30.73],
+    [36.91, 30.755],
+    [36.94, 30.785],
+    [36.943, 30.82],
+    [36.938, 30.85],
+    [36.93, 30.89],
+    [36.922, 30.93],
+    [36.918, 30.97],
+    [36.912, 31.02],
+    [36.9, 31.08],
+    [36.885, 31.14],
+    [36.865, 31.2],
+    [36.85, 31.25],
+    [36.846025, 31.319648],
+  ];
 
   // ==== HARİTA VE ANİMASYON ====
   const mapElement = document.getElementById("realMap");
   if (mapElement && typeof L !== "undefined") {
-    const routeKirmizi = [
-      [36.929111, 30.62975],
-      [36.91, 30.62],
-      [36.88, 30.61],
-      [36.888, 30.635],
-      [36.892, 30.66],
-      [36.902, 30.69],
-      [36.905, 30.71],
-      [36.885, 30.73],
-      [36.91, 30.755],
-      [36.94, 30.785],
-      [36.943, 30.82],
-      [36.938, 30.85],
-      [36.93, 30.89],
-      [36.922, 30.93],
-      [36.918, 30.97],
-      [36.912, 31.02],
-      [36.9, 31.08],
-      [36.885, 31.14],
-      [36.865, 31.2],
-      [36.85, 31.25],
-      [36.846025, 31.319648],
-    ];
-
-    const centerLat =
-      (routeKirmizi[0][0] + routeKirmizi[routeKirmizi.length - 1][0]) / 2;
-    const centerLng =
-      (routeKirmizi[0][1] + routeKirmizi[routeKirmizi.length - 1][1]) / 2;
-
     const map = L.map("realMap", {
       zoomControl: false,
       dragging: false,
@@ -253,7 +270,12 @@ document.addEventListener("DOMContentLoaded", () => {
       boxZoom: false,
       keyboard: false,
       tap: false,
-    }).setView([centerLat, centerLng], isMobile ? 9 : 10);
+    });
+
+    // Haritayı verilen rotaya göre ekrana otomatik ve kusursuz sığdırır
+    map.fitBounds(L.latLngBounds(routeKirmizi), {
+      padding: isMobile ? [30, 30] : [50, 50],
+    });
 
     L.tileLayer(
       "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
@@ -436,7 +458,6 @@ document.addEventListener("DOMContentLoaded", () => {
         let startPt = map.latLngToContainerPoint(startLL);
         ctx.beginPath();
         ctx.moveTo(startPt.x, startPt.y);
-
         let steps = 15;
         for (let i = 1; i < steps; i++) {
           let currentPct = startPct + (endPct - startPct) * (i / steps);
@@ -460,11 +481,9 @@ document.addEventListener("DOMContentLoaded", () => {
         ctx.shadowColor = "rgba(0,0,0,0.5)";
         ctx.lineWidth = 8;
         ctx.strokeStyle = `rgba(15, 5, 20, ${opacity})`;
-
         let startPt = map.latLngToContainerPoint(routeData[0].latLng);
         ctx.beginPath();
         ctx.moveTo(startPt.x, startPt.y);
-
         for (let i = 1; i < 100; i++) {
           let ptLL = getLatLngAtPct(i / 100);
           let pt = map.latLngToContainerPoint(ptLL);
@@ -484,7 +503,6 @@ document.addEventListener("DOMContentLoaded", () => {
           ctx.shadowColor = "#d4af37";
           ctx.lineWidth = isMobile ? 3 : 5;
           ctx.strokeStyle = "#d4af37";
-
           drawRouteSegment(ctx, 0, t);
           drawRouteSegment(ctx, 1.0 - t, 1.0);
           if (t >= 0.5) {
@@ -501,14 +519,12 @@ document.addEventListener("DOMContentLoaded", () => {
           ctx.strokeStyle = `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.5})`;
           drawLightningOnRoute(0, 1.0, 15);
           ctx.restore();
-
           if (t >= 1) {
             phase = "SHATTER";
             t = 0;
             voidOpacity = 0.5;
             let midLL = getLatLngAtPct(0.5);
             let midPt = map.latLngToContainerPoint(midLL);
-
             for (let i = 0; i < 60; i++) {
               let spawnX = midPt.x + (Math.random() - 0.5) * 50;
               let spawnY = midPt.y + (Math.random() - 0.5) * 50;
@@ -526,7 +542,6 @@ document.addEventListener("DOMContentLoaded", () => {
             for (let i = 0; i < 3; i++) drawLightningOnRoute(0, 1.0, 80);
           }
           t += 0.01;
-
           for (let i = particles.length - 1; i >= 0; i--) {
             particles[i].update();
             particles[i].draw(ctx);
@@ -559,6 +574,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (entry.isIntersecting && !mapStarted) {
               mapStarted = true;
               map.invalidateSize();
+              map.fitBounds(L.latLngBounds(routeKirmizi), {
+                padding: isMobile ? [30, 30] : [50, 50],
+              });
               resizeCanvas();
               animateCanvas();
             }
@@ -568,5 +586,210 @@ document.addEventListener("DOMContentLoaded", () => {
       );
       if (mapSection) mapObserver.observe(mapSection);
     }
+  }
+
+  // ==== 1. KAR KÜRESİ EFEKTİ ====
+  const snowGlobe = document.getElementById("snowGlobe");
+  const snowContainer = document.getElementById("snowContainer");
+
+  if (snowGlobe) {
+    snowGlobe.addEventListener("click", () => {
+      snowGlobe.classList.add("shake");
+      createSnowflakes();
+      setTimeout(() => {
+        snowGlobe.classList.remove("shake");
+      }, 500);
+    });
+  }
+
+  function createSnowflakes() {
+    for (let i = 0; i < 35; i++) {
+      const snowflake = document.createElement("div");
+      snowflake.classList.add("snowflake");
+      const size = Math.random() * 4 + 2;
+      const left = Math.random() * 190;
+      const duration = Math.random() * 2 + 1;
+      snowflake.style.width = `${size}px`;
+      snowflake.style.height = `${size}px`;
+      snowflake.style.left = `${left}px`;
+      snowflake.style.transition = `top ${duration}s linear, opacity ${duration}s ease-in-out`;
+      if (snowContainer) {
+        snowContainer.appendChild(snowflake);
+      }
+
+      setTimeout(() => {
+        snowflake.style.top = "190px";
+        snowflake.style.opacity = "0";
+      }, 50);
+      setTimeout(() => {
+        snowflake.remove();
+      }, duration * 1000);
+    }
+  }
+
+  // ==== 2. GERÇEKÇİ TIR KOKPİTİ VE GPS OLUŞTURMA ====
+  const driveModeBtn = document.getElementById("driveModeBtn");
+  const driveIcon = document.getElementById("driveIcon");
+  const nightOverlay = document.getElementById("nightOverlay");
+
+  // GPS haritasını sadece 1 kez yüklemek için takip değişkenleri
+  let gpsMapInitialized = false;
+  let gpsMap = null;
+  let gpsRoute = null;
+
+  if (nightOverlay) {
+    const windshieldFrame = document.createElement("div");
+    windshieldFrame.className = "truck-windshield-frame";
+    windshieldFrame.appendChild(document.createElement("div")).className =
+      "truck-glass-texture";
+
+    const dashboard = document.createElement("div");
+    dashboard.className = "scania-dashboard";
+
+    const dials = document.createElement("div");
+    dials.className = "scania-dials";
+    dials.innerHTML = '<div class="dial"></div><div class="dial"></div>';
+
+    const steeringWheel = document.createElement("div");
+    steeringWheel.className = "scania-steering-wheel";
+    steeringWheel.innerHTML =
+      '<div class="scania-spoke spoke-left"></div><div class="scania-spoke spoke-right"></div><div class="scania-spoke spoke-bottom"></div><div class="scania-wheel-hub"></div>';
+
+    // GPS EKRANI (Burası Leaflet için ID aldı)
+    const centerConsole = document.createElement("div");
+    centerConsole.className = "scania-center-console";
+    centerConsole.innerHTML =
+      '<div class="scania-screen" id="gpsMapScreen"></div>';
+
+    const kabinDate = document.createElement("div");
+    kabinDate.className = "kabin-date-sticker";
+    kabinDate.innerText = "24.12.2025";
+
+    dashboard.appendChild(dials);
+    dashboard.appendChild(steeringWheel);
+    dashboard.appendChild(centerConsole);
+
+    // İnce Belli Çay Bardağı
+    const teaGlass = document.createElement("div");
+    teaGlass.className = "turkish-tea-glass";
+    teaGlass.innerHTML =
+      '<div class="tea-liquid"></div><div class="tea-steam"></div>';
+    dashboard.appendChild(teaGlass);
+
+    const wiperLeft = document.createElement("div");
+    wiperLeft.className = "wiper-arm wiper-left";
+    const wiperRight = document.createElement("div");
+    wiperRight.className = "wiper-arm wiper-right";
+
+    nightOverlay.appendChild(windshieldFrame);
+    nightOverlay.appendChild(dashboard);
+    nightOverlay.appendChild(kabinDate);
+    nightOverlay.appendChild(wiperLeft);
+    nightOverlay.appendChild(wiperRight);
+  }
+
+  let isDriveMode = false;
+
+  if (driveModeBtn) {
+    driveModeBtn.addEventListener("click", () => {
+      isDriveMode = !isDriveMode;
+      document.body.classList.toggle("night-drive-mode", isDriveMode);
+
+      if (isDriveMode) {
+        driveIcon.style.color = "#ff8c00";
+        driveIcon.style.borderColor = "#ff8c00";
+
+        // Gece moduna geçildiğinde animasyonun bitmesini bekleyip GPS haritasını yükle
+        setTimeout(() => {
+          if (!gpsMapInitialized && typeof L !== "undefined") {
+            gpsMapInitialized = true;
+
+            // Etkileşimi kapalı, sadece görsel bir GPS haritası
+            gpsMap = L.map("gpsMapScreen", {
+              zoomControl: false,
+              dragging: false,
+              touchZoom: false,
+              doubleClickZoom: false,
+              scrollWheelZoom: false,
+              boxZoom: false,
+              keyboard: false,
+              tap: false,
+              attributionControl: false, // Sağ alttaki leaflet yazısını kaldırır
+            });
+
+            // Karanlık tema altlığı (CartoDB Dark Matter)
+            L.tileLayer(
+              "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+              { maxZoom: 19 },
+            ).addTo(gpsMap);
+
+            // Rota Çizgisi (Neon Camgöbeği)
+            gpsRoute = L.polyline(routeKirmizi, {
+              color: "#00ffff",
+              weight: 4,
+              opacity: 0.9,
+              shadowBlur: 10,
+            }).addTo(gpsMap);
+
+            // Haritayı ekrana tam sığdır
+            gpsMap.fitBounds(gpsRoute.getBounds(), { padding: [10, 10] });
+          } else if (gpsMap) {
+            // Harita zaten yüklüyse boyutunu tazeleyip ortala
+            gpsMap.invalidateSize();
+            gpsMap.fitBounds(gpsRoute.getBounds(), { padding: [10, 10] });
+          }
+        }, 800); // Overlay'in CSS ile ekrana geliş süresini bekler
+      } else {
+        driveIcon.style.color = "";
+        driveIcon.style.borderColor = "";
+      }
+    });
+  }
+
+  // ==== 3. UÇAN BİLETLER AÇ/KAPAT (TOGGLE) ====
+  const peekTicket = document.getElementById("peekTicket");
+  const flyingTicketsWrapper = document.getElementById("flyingTicketsWrapper");
+
+  if (peekTicket && flyingTicketsWrapper) {
+    const ticketIcon = peekTicket.querySelector("i");
+
+    peekTicket.addEventListener("click", () => {
+      const isRevealed = flyingTicketsWrapper.classList.contains("revealed");
+
+      if (isRevealed) {
+        const snowGlobeWrapper = document.getElementById("snowGlobe");
+        if (snowGlobeWrapper) {
+          snowGlobeWrapper.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
+
+        setTimeout(() => {
+          flyingTicketsWrapper.classList.remove("revealed");
+        }, 200);
+
+        if (ticketIcon) {
+          ticketIcon.classList.remove("fa-xmark");
+          ticketIcon.classList.add("fa-ticket-simple");
+        }
+        peekTicket.setAttribute("data-tooltip", "AŞTİ Biletleri");
+      } else {
+        flyingTicketsWrapper.classList.add("revealed");
+
+        setTimeout(() => {
+          flyingTicketsWrapper.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }, 300);
+
+        if (ticketIcon) {
+          ticketIcon.classList.remove("fa-ticket-simple");
+          ticketIcon.classList.add("fa-xmark");
+        }
+        peekTicket.setAttribute("data-tooltip", "Biletleri Gizle");
+      }
+    });
   }
 });
