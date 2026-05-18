@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     themeIcon.className = "fa-solid fa-moon";
   }
 
-  // ==== MÜZİK ÇALAR (KESİN ÇÖZÜM - 2:14'TEN BAŞLAYAN) ====
+  // ==== MÜZİK ÇALAR (MOBİL VE SANİYE KORUMALI) ====
   const bgMusic = document.getElementById("bgMusic");
   const musicToggleBtn = document.getElementById("musicToggleBtn");
   const musicIcon = document.getElementById("musicIcon");
@@ -16,12 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let isFirstPlay = true;
 
   if (musicToggleBtn) {
-    // Tarayıcıya şarkıyı arka planda önceden yüklemesini emrediyoruz
-    if (bgMusic) bgMusic.preload = "auto";
-
     musicToggleBtn.addEventListener("click", () => {
       if (!bgMusic) {
-        console.error("Müzik dosyası HTML içinde bulunamadı!");
+        console.error("Müzik dosyası bulunamadı!");
         return;
       }
 
@@ -33,31 +30,36 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         isPlaying = false;
       } else {
-        // Şarkıyı başlatmayı dener
-        let playPromise = bgMusic.play();
-
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              // ŞARKI BAŞARIYLA BAŞLADIĞI AN İSTEDİĞİMİZ SANİYEYE ATLIYORUZ
-              if (isFirstPlay) {
-                bgMusic.currentTime = 180; // 2 dakika 14 saniye (120+14)
-                isFirstPlay = false;
-              }
-            })
-            .catch((error) => {
-              console.log("Tarayıcı oynatmayı engelledi:", error);
-            });
+        // MOBİL İÇİN KUSURSUZ SANİYE ATLAMA MANTIĞI
+        if (isFirstPlay) {
+          const jumpToSeconds = 134; // 2 Dakika 14 Saniye
+          
+          // Eğer şarkı bilgisayardaki gibi önceden yüklendiyse:
+          if (bgMusic.readyState >= 1) {
+            bgMusic.currentTime = jumpToSeconds;
+          } else {
+            // Eğer telefondaki gibi henüz YÜKLENMEDİYSE, yüklenmesini bekle ve zıpla:
+            bgMusic.addEventListener('loadedmetadata', () => {
+              bgMusic.currentTime = jumpToSeconds;
+            }, { once: true });
+          }
+          isFirstPlay = false;
         }
 
-        if (musicIcon) {
-          musicIcon.classList.remove("fa-play");
-          musicIcon.classList.add("fa-pause");
-        }
-        isPlaying = true;
+        // Şarkıyı Başlat
+        bgMusic.play().then(() => {
+          if (musicIcon) {
+            musicIcon.classList.remove("fa-play");
+            musicIcon.classList.add("fa-pause");
+          }
+          isPlaying = true;
+        }).catch((error) => {
+          console.log("Tarayıcı oynatmayı engelledi:", error);
+        });
       }
     });
   }
+
 
   // ==== DAKTİLO EFEKTİ ====
   const subtitleContainer = document.getElementById("typewriter-text");
