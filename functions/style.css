@@ -1,4 +1,4 @@
-/* --- KOYU TEMA (VARSAYILAN) --- */
+/* --- KOYU TEMA --- */
 :root {
   --primary-bg: #0f172a;
   --secondary-bg: #1e293b;
@@ -26,7 +26,7 @@
   --nav-bg: rgba(248, 250, 252, 0.85);
 }
 
-/* --- PEMBE TEMA --- */
+/* --- PEMBE TEMA (VARSAYILAN) --- */
 [data-theme="pink"] {
   --primary-bg: #fdf2f8;
   --secondary-bg: #ffffff;
@@ -40,23 +40,18 @@
   --nav-bg: rgba(253, 242, 248, 0.85);
 }
 
-/* Pembe Tema Özel İmleç & Kalp Rengi */
+/* Pembe Temada Fare İmlecini Normale Döndürme İptali */
 [data-theme="pink"],
 [data-theme="pink"] * {
-  cursor:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23db2777%22%20d%3D%22M12%2021.35l-1.45-1.32C5.4%2015.36%202%2012.28%202%208.5%202%205.42%204.42%203%207.5%203c1.74%200%203.41.81%204.5%202.09C13.09%203.81%2014.76%203%2016.5%203%2019.58%203%2022%205.42%2022%208.5c0%203.78-3.4%206.86-8.55%2011.54L12%2021.35z%22%2F%3E%3C%2Fsvg%3E")
-      12 12,
-    auto !important;
+  cursor: auto !important;
 }
 [data-theme="pink"] button,
 [data-theme="pink"] a,
 [data-theme="pink"] .nav-link,
 [data-theme="pink"] .theme-toggle,
-[data-theme="pink"] .music-btn {
-  cursor:
-    url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%239d174d%22%20d%3D%22M12%2021.35l-1.45-1.32C5.4%2015.36%202%2012.28%202%208.5%202%205.42%204.42%203%207.5%203c1.74%200%203.41.81%204.5%202.09C13.09%203.81%2014.76%203%2016.5%203%2019.58%203%2022%205.42%2022%208.5c0%203.78-3.4%206.86-8.55%2011.54L12%2021.35z%22%2F%3E%3C%2Fsvg%3E")
-      12 12,
-    pointer !important;
+[data-theme="pink"] .dock-item,
+.timeline-content.click-to-open {
+  cursor: pointer !important;
 }
 [data-theme="pink"] .heart-icon {
   color: #db2777;
@@ -146,38 +141,6 @@ h4 {
   background-color: var(--accent-color);
   color: var(--primary-bg);
   transform: scale(1.1);
-}
-
-/* --- MUSIC PLAYER --- */
-.music-player-wrapper {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  z-index: 999;
-  transition: transform 0.3s ease;
-}
-.music-player-wrapper:hover {
-  transform: translateY(-5px);
-}
-.music-btn {
-  background-color: var(--secondary-bg);
-  color: var(--accent-color);
-  border: 1px solid var(--accent-color);
-  padding: 12px 24px;
-  border-radius: 30px;
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-size: 1rem;
-  box-shadow: 0 10px 30px var(--card-shadow);
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  backdrop-filter: blur(8px);
-}
-.music-btn:hover {
-  background-color: var(--accent-color);
-  color: #fff;
 }
 
 /* --- BAŞLANGIÇ EKRANI --- */
@@ -414,6 +377,7 @@ h4 {
   transform: translateX(0) translateY(0);
   opacity: 1;
 }
+
 .timeline-content {
   padding: 20px 30px;
   background-color: var(--primary-bg);
@@ -422,16 +386,110 @@ h4 {
   transition: all 0.3s ease;
   box-shadow: 0 5px 15px var(--card-shadow);
 }
-.timeline-content:hover {
-  border-color: var(--accent-color);
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(212, 175, 55, 0.15);
+/* Tıklanabilir Hover Efekti */
+.timeline-content.click-to-open {
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
 }
+.timeline-content.click-to-open:hover {
+  transform: scale(1.03);
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+}
+
 .timeline-date {
   color: var(--accent-color);
   font-weight: 600;
   font-size: 0.9rem;
   margin-bottom: 5px;
+}
+
+/* =========================================
+   ZARİF MODAL (ANI KARTI) TASARIMI
+========================================= */
+.elegant-modal {
+  background: var(--primary-bg) !important;
+  border: 2px solid var(--accent-color) !important;
+  border-radius: 25px !important;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  position: relative;
+}
+.elegant-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  color: var(--accent-color);
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+.elegant-close-btn:hover {
+  background: var(--accent-color);
+  color: var(--primary-bg);
+  transform: rotate(90deg);
+}
+.modal-icon {
+  font-size: 2.5rem;
+  color: var(--accent-color);
+  opacity: 0.8;
+  filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+}
+.elegant-title {
+  font-family: "Playfair Display", serif;
+  color: var(--accent-color);
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+.elegant-divider {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent-color),
+    transparent
+  );
+  margin: 0 auto;
+}
+.elegant-text p {
+  color: var(--text-muted);
+  font-family: "Poppins", sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.9;
+  text-align: center;
+  margin-bottom: 1.2rem;
+}
+.elegant-text p:last-child {
+  margin-bottom: 0;
+}
+.elegant-date {
+  font-family: "Playfair Display", serif;
+  font-size: 1.15rem !important;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--accent-color);
+  font-style: italic;
+  opacity: 0.9;
+  padding-top: 15px;
+  border-top: 1px solid rgba(212, 175, 55, 0.15);
+  display: inline-block;
+  min-width: 150px;
 }
 
 /* --- SÖZLER (QUOTES) --- */
@@ -514,52 +572,734 @@ h4 {
   animation: heartbeat 1.5s infinite;
 }
 
-/* ==== AŞAĞI/YUKARI KAYDIRMA OKU ==== */
-.scroll-down-btn {
+/* --- GÜNCEL KAR KÜRESİ VE KAİDE --- */
+.snow-globe-section {
+  padding: 2rem 0;
+}
+.snow-globe-wrapper {
+  cursor: pointer;
+  position: relative;
+  width: 200px;
+  margin: 0 auto 30px auto;
+  transition: transform 0.1s ease-in-out;
+}
+.snow-globe-wrapper.shake {
+  animation: shakeGlobe 0.5s ease-in-out;
+}
+.snow-globe-glass {
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    inset -10px -10px 20px rgba(0, 0, 0, 0.2),
+    0 10px 25px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(1px);
+  z-index: 2;
+}
+.globe-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+  margin: 0;
+}
+.ferris-wheel-icon {
+  font-size: 5rem;
+  color: var(--accent-color);
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.snow-globe-pedestal {
+  width: 140px;
+  height: 40px;
+  background: linear-gradient(to right, #333, #111);
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  border-radius: 0 0 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.6);
+  border-top: 3px solid #555;
+}
+.pedestal-date {
+  color: #d4af37;
+  font-family: "Playfair Display", serif;
+  font-weight: bold;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+}
+.snowflake {
+  position: absolute;
+  top: -10px;
+  background: white;
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+@keyframes shakeGlobe {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0);
+  }
+  25% {
+    transform: translateX(-10px) rotate(-5deg);
+  }
+  50% {
+    transform: translateX(10px) rotate(5deg);
+  }
+  75% {
+    transform: translateX(-10px) rotate(-5deg);
+  }
+}
+
+/* =========================================
+   GERÇEKÇİ TIR KOKPİTİ (CSS ÇİZİMİ)
+========================================= */
+#nightOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 1s ease,
+    visibility 1s ease;
+  overflow: hidden;
+}
+body.night-drive-mode #nightOverlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Cam Çerçevesi (A Sütunları) */
+.truck-windshield-frame {
+  position: absolute;
+  inset: 0;
+  border-left: 60px solid #111;
+  border-right: 60px solid #111;
+  border-top: 30px solid #111;
+  border-radius: 50px 50px 0 0;
+  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.9);
+  z-index: 10;
+}
+.truck-glass-texture {
+  position: absolute;
+  inset: 0;
+  opacity: 0.8;
+  z-index: 5;
+  background-image:
+    radial-gradient(
+      circle at 20% 30%,
+      rgba(255, 255, 255, 0.4) 1px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 70% 50%,
+      rgba(255, 255, 255, 0.4) 1.5px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 40% 70%,
+      rgba(255, 255, 255, 0.3) 2px,
+      transparent 4px
+    );
+  background-size: 150px 150px;
+}
+
+/* --- KOKPİT (DASHBOARD) ALT YAPI VE IŞIKLANDIRMA --- */
+.scania-dashboard {
+  position: absolute;
+  bottom: -30px;
+  left: -20px;
+  right: -20px;
+  height: 30vh;
+  min-height: 250px;
+  background: linear-gradient(to top, #050505, #1f1f2e);
+  border-top: 4px solid rgba(212, 175, 55, 0.4);
+  border-radius: 20% 20% 0 0 / 20px 20px 0 0;
+  z-index: 11;
+  box-shadow:
+    inset 0 15px 30px rgba(212, 175, 55, 0.1),
+    0 -20px 50px rgba(0, 0, 0, 0.9);
+}
+
+/* Kadranlar (Işıklandırılmış Hız & Devir) */
+.scania-dials {
+  position: absolute;
+  top: 20px;
+  left: 35%;
+  width: 240px;
+  display: flex;
+  justify-content: space-between;
+  transform: translateX(-50%);
+}
+.dial {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 3px solid #334;
+  background: radial-gradient(circle, #0f1c2e 0%, #050505 80%);
+  box-shadow:
+    inset 0 0 20px rgba(0, 200, 255, 0.4),
+    0 0 15px rgba(0, 200, 255, 0.2);
+  position: relative;
+}
+.dial::after {
+  content: "";
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  right: 15%;
+  bottom: 15%;
+  border-radius: 50%;
+  border: 2px dashed rgba(0, 255, 255, 0.6);
+  filter: drop-shadow(0 0 3px rgba(0, 255, 255, 0.8));
+}
+
+/* Direksiyon Simidi */
+.scania-steering-wheel {
+  position: absolute;
+  bottom: -20px;
+  left: 35%;
+  width: 320px;
+  height: 320px;
+  border: 35px solid #1a1a1a;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 10px 20px rgba(0, 0, 0, 0.9),
+    0 10px 25px rgba(0, 0, 0, 0.7);
+  z-index: 13;
+  transform: translateX(-50%);
+}
+.scania-wheel-hub {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  background: #181818;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow:
+    inset 0 5px 15px rgba(255, 255, 255, 0.1),
+    0 5px 15px rgba(0, 0, 0, 0.9);
+}
+.scania-spoke {
+  position: absolute;
+  background: #111;
+}
+.spoke-left {
+  top: 50%;
+  left: -25px;
+  width: 50%;
+  height: 40px;
+  transform: translateY(-50%);
+}
+.spoke-right {
+  top: 50%;
+  right: -25px;
+  width: 50%;
+  height: 40px;
+  transform: translateY(-50%);
+}
+.spoke-bottom {
+  bottom: -25px;
+  left: 50%;
+  width: 40px;
+  height: 50%;
+  transform: translateX(-50%);
+}
+
+/* Orta Konsol (YENİ: GPS Ekranı Ayarları) */
+.scania-center-console {
+  position: absolute;
+  top: 30px;
+  left: 55%;
+  width: 250px;
+  height: 180px;
+  background: #111;
+  border: 2px solid #2a2a2a;
+  border-radius: 10px;
+  transform: perspective(600px) rotateY(-15deg);
+  z-index: 12;
+  padding: 15px;
+  box-shadow:
+    inset 0 0 20px #000,
+    -15px 15px 30px rgba(0, 0, 0, 0.8);
+}
+
+.scania-screen {
+  width: 100%;
+  height: 100%; /* Tam dolsun */
+  background: #000;
+  border: 2px solid #000;
+  border-radius: 5px;
+  box-shadow:
+    inset 0 0 20px rgba(0, 150, 255, 0.5),
+    0 0 15px rgba(0, 150, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* YENİ: GPS MAP Yazısını Üste Taşıdık */
+.scania-screen::after {
+  content: "GPS MAP";
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  color: rgba(0, 255, 255, 0.9);
+  font-family: monospace;
+  font-size: 11px;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.8);
+  z-index: 1000; /* Haritanın üstünde kalsın */
+  pointer-events: none; /* Tıklanmasın */
+  background: rgba(0, 21, 40, 0.7);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+/* Leaflet Ayarları (Siyah ekranla uyum) */
+#gpsMapScreen {
+  background-color: #050505 !important;
+}
+#gpsMapScreen .leaflet-control-container {
+  display: none !important; /* Zoom araçlarını gizle */
+}
+
+/* === İNCE BELLİ ÇAY BARDAĞI === */
+.turkish-tea-glass {
+  position: absolute;
+  bottom: 50px;
+  right: 20%;
+  width: 28px;
+  height: 45px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 2px 2px 12px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: -5px 10px 15px rgba(0, 0, 0, 0.7);
+  z-index: 14;
+}
+.tea-liquid {
+  position: absolute;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+  height: 55%;
+  background: linear-gradient(to bottom, #a00000, #5c0000);
+  border-radius: 0 0 8px 8px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.6);
+}
+.tea-steam {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  width: 5px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.4);
+  filter: blur(3px);
+  transform: translateX(-50%);
+  animation: steamRise 2s infinite ease-in-out alternate;
+}
+@keyframes steamRise {
+  0% {
+    transform: translate(-50%, 0) scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-80%, -15px) scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Tarih Stickerı (Camın köşesinde) */
+.kabin-date-sticker {
+  position: absolute;
+  bottom: 32vh;
+  left: 80px;
+  background: white;
+  color: #db2777;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+  transform: rotate(-5deg);
+  z-index: 9;
+}
+
+/* --- SİLECEKLER --- */
+.wiper-arm {
+  position: absolute;
+  bottom: 28vh;
+  width: 18px;
+  height: 50vh;
+  background: linear-gradient(to right, #111, #222, #111);
+  border-radius: 5px 5px 0 0;
+  transform-origin: bottom center;
+  z-index: 15;
+}
+.wiper-arm::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -3px;
+  width: 24px;
+  height: 85%;
+  background: #050505;
+  border-radius: 3px;
+}
+.wiper-left {
+  left: 25%;
+  transform: rotate(-80deg);
+}
+.wiper-right {
+  right: 25%;
+  transform: rotate(80deg);
+}
+
+body.night-drive-mode .wiper-left {
+  animation: wipeTirLeft 2.2s infinite alternate ease-in-out;
+}
+body.night-drive-mode .wiper-right {
+  animation: wipeTirRight 2.2s infinite alternate ease-in-out;
+}
+
+@keyframes wipeTirLeft {
+  0% {
+    transform: rotate(-80deg);
+  }
+  100% {
+    transform: rotate(15deg);
+  }
+}
+@keyframes wipeTirRight {
+  0% {
+    transform: rotate(80deg);
+  }
+  100% {
+    transform: rotate(-15deg);
+  }
+}
+
+/* =========================================
+   GERÇEKÇİ İKİLİ OTOBÜS BİLETİ TASARIMI
+========================================= */
+
+.hidden-tickets {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin-top: 0;
+  transform: translate(-50vw, 50vh) scale(0.1) rotate(-20deg);
+  transition: all 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+  width: 100%;
+}
+.hidden-tickets.revealed {
+  max-height: 1600px;
+  opacity: 1;
+  margin-top: 30px;
+  transform: translate(0, 0) scale(1) rotate(0deg);
+}
+
+.twin-tickets {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.realistic-ticket {
+  display: flex;
+  width: 100%;
+  max-width: 1000px;
+  background: var(--secondary-bg);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px var(--card-shadow);
+  border: 1px solid rgba(150, 150, 150, 0.2);
+  overflow: hidden;
+  font-family: "Courier New", Courier, monospace;
+  color: var(--text-main);
+}
+
+.ticket-barcode-vertical {
+  width: 40px;
+  background: repeating-linear-gradient(
+    0deg,
+    var(--text-main),
+    var(--text-main) 2px,
+    transparent 2px,
+    transparent 4px,
+    var(--text-main) 4px,
+    var(--text-main) 5px,
+    transparent 5px,
+    transparent 8px,
+    var(--text-main) 8px,
+    var(--text-main) 12px,
+    transparent 12px,
+    transparent 14px
+  );
+  border-right: 2px solid var(--text-muted);
+}
+
+.ticket-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.ticket-header {
+  background: var(--accent-color);
+  color: var(--primary-bg);
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+.th-right {
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+.ticket-content {
+  padding: 15px 20px;
+  background: transparent;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ticket-row {
+  display: flex;
+  align-items: center;
+}
+.t-label {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  width: 110px;
+  text-transform: uppercase;
+}
+.t-value {
+  flex: 1;
+  border: 1px solid var(--text-muted);
+  background: transparent;
+  padding: 3px 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--text-main);
+}
+
+.gate-box {
+  border: 2px solid var(--accent-color);
+  padding: 5px;
+  margin-left: 15px;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.gate-box .t-label {
+  width: auto;
+  min-width: unset;
+  margin-bottom: 2px;
+}
+.gate-value {
+  font-size: 1.8rem;
+  text-align: center;
+  font-weight: bold;
+  color: var(--accent-color);
+}
+
+.ticket-footer {
+  background: var(--accent-color);
+  color: var(--primary-bg);
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 20px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.ticket-stub {
+  width: 180px;
+  background: var(--secondary-bg);
+  border-left: 3px dashed var(--accent-color);
+  display: flex;
+  flex-direction: column;
+}
+.ticket-content-small {
+  padding: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.ticket-row-s {
+  display: flex;
+  flex-direction: column;
+}
+.t-label-s {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+.t-value-s {
+  border: 1px solid var(--text-muted);
+  padding: 2px 5px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: var(--text-main);
+}
+
+.stub-barcode {
+  height: 40px;
+  margin: 10px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--text-main),
+    var(--text-main) 2px,
+    transparent 2px,
+    transparent 4px,
+    var(--text-main) 4px,
+    var(--text-main) 5px,
+    transparent 5px,
+    transparent 8px
+  );
+}
+
+/* --- BÖLÜM AYIRICI ZARİF ÇİZGİ --- */
+.section-divider {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    var(--accent-color),
+    transparent
+  );
+  opacity: 0.4;
+  margin: 4rem auto;
+  width: 75%;
+}
+
+/* =========================================
+   YÜZEN ALT MENÜ (DOCK) VE TOOLTIP TASARIMI
+========================================= */
+.floating-dock {
   position: fixed;
   bottom: 25px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: var(--secondary-bg);
-  border: 2px solid var(--accent-color);
+  display: flex;
+  justify-content: center;
+  gap: 15px !important;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 10px 20px;
+  border-radius: 50px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  z-index: 9999;
+  transition: all 0.3s ease;
+}
+
+body[data-theme="dark"] .floating-dock {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dock-item {
+  background: var(--primary-bg);
   color: var(--accent-color);
+  border: none;
   width: 50px;
   height: 50px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  z-index: 998;
+  font-size: 1.2rem;
   cursor: pointer;
-  opacity: 1;
-  box-shadow: 0 4px 15px var(--card-shadow);
-  transition: all 0.3s ease;
-  animation: bounceBtn 2s infinite;
-}
-.scroll-down-btn:hover {
-  background-color: var(--accent-color);
-  color: #fff;
+  box-shadow: 0 4px 10px var(--card-shadow);
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-@keyframes bounceBtn {
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateY(0) translateX(-50%);
-  }
-  40% {
-    transform: translateY(-15px) translateX(-50%);
-  }
-  60% {
-    transform: translateY(-7px) translateX(-50%);
-  }
+.dock-item:hover {
+  transform: translateY(-8px) scale(1.1);
+  background: var(--accent-color);
+  color: var(--primary-bg);
+}
+
+/* Tooltip (Bilgi Balonu) */
+.dock-item::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%) scale(0.5);
+  background: var(--text-main);
+  color: var(--primary-bg);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+.dock-item::before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: var(--text-main) transparent transparent transparent;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.dock-item:hover::after,
+.dock-item:hover::before {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
 }
 
 /* ==== MOBİL GÖRÜNÜM AYARLARI ==== */
 @media screen and (max-width: 768px) {
+  /* Navbar */
   .navbar-collapse {
     background: var(--nav-bg);
     padding: 15px;
@@ -568,21 +1308,7 @@ h4 {
     border: 1px solid rgba(212, 175, 55, 0.2);
   }
 
-  .music-player-wrapper {
-    bottom: 15px;
-    right: 15px;
-  }
-  .music-btn {
-    padding: 12px;
-    border-radius: 50%;
-    width: 55px;
-    height: 55px;
-    justify-content: center;
-  }
-  .music-btn #musicText {
-    display: none;
-  }
-
+  /* Timeline */
   .timeline-line,
   .timeline-progress {
     left: 24px;
@@ -610,11 +1336,132 @@ h4 {
     opacity: 1;
   }
 
+  /* Map */
   .map-wrapper {
     height: 400px;
     border-radius: 15px;
   }
-  .scroll-down-btn {
+
+  /* Dock */
+  .floating-dock {
+    gap: 10px !important;
+    padding: 8px 15px;
     bottom: 15px;
+  }
+  .dock-item {
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+
+  /* Bilet Mobil Düzeltmeleri */
+  .realistic-ticket {
+    flex-direction: column;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+  }
+  .ticket-barcode-vertical {
+    display: none;
+  }
+  .ticket-body {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+  .ticket-header {
+    font-size: 1.1rem !important;
+    padding: 8px 12px !important;
+  }
+  .ticket-content {
+    padding: 10px 12px !important;
+    gap: 6px !important;
+  }
+  .ticket-row {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .t-label {
+    width: 100% !important;
+    font-size: 0.8rem !important;
+    margin-bottom: 2px;
+  }
+  .t-value {
+    width: 100% !important;
+    font-size: 0.9rem !important;
+    padding: 4px 8px !important;
+    box-sizing: border-box;
+  }
+
+  /* Peron Kutusu ve Mobil Yükseklik */
+  .gate-box {
+    width: 100% !important;
+    height: auto !important;
+    margin-left: 0 !important;
+    margin-top: 10px;
+    padding: 8px !important;
+    box-sizing: border-box;
+  }
+  .gate-value {
+    font-size: 1.4rem !important;
+  }
+  .ticket-footer {
+    font-size: 0.8rem !important;
+    padding: 6px 12px !important;
+  }
+
+  /* Stub (Koparma Yeri) */
+  .ticket-stub {
+    width: 100% !important;
+    border-left: none !important;
+    border-top: 3px dashed var(--accent-color) !important;
+    box-shadow: none !important;
+    box-sizing: border-box;
+  }
+  .ticket-content-small {
+    padding: 12px !important;
+    gap: 6px !important;
+  }
+  .ticket-row-s {
+    width: 100%;
+  }
+  .t-label-s {
+    font-size: 0.7rem !important;
+    margin-bottom: 2px;
+  }
+  .t-value-s {
+    width: 100% !important;
+    font-size: 0.85rem !important;
+    padding: 4px 8px !important;
+    box-sizing: border-box;
+  }
+  .stub-barcode {
+    height: 35px !important;
+    margin: 10px 12px !important;
+  }
+
+  /* Bilet Kapsayıcı Yükseklik Sınırı Esnetmesi */
+  .hidden-tickets.revealed {
+    max-height: 3500px !important;
+    padding-bottom: 40px;
+  }
+}
+
+/* === UÇAN BİLETLERİN BAŞLIĞI === */
+.tickets-title {
+  font-family: "Playfair Display", serif;
+  color: var(--accent-color);
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+  text-shadow: 0 4px 15px var(--card-shadow);
+  width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .tickets-title {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    padding: 0 15px;
   }
 }
