@@ -101,6 +101,7 @@ h4 {
   -webkit-backdrop-filter: blur(15px);
   border-bottom: 1px solid rgba(212, 175, 55, 0.2);
   transition: all 0.5s ease;
+  z-index: 9999999 !important; /* EKLENDİ */
 }
 .navbar-brand {
   font-family: "Playfair Display", serif;
@@ -1297,6 +1298,18 @@ body[data-theme="dark"] .floating-dock {
   transform: translateX(-50%) scale(1);
 }
 
+/* === UÇAN BİLETLERİN BAŞLIĞI === */
+.tickets-title {
+  font-family: "Playfair Display", serif;
+  color: var(--accent-color);
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 30px;
+  text-shadow: 0 4px 15px var(--card-shadow);
+  width: 100%;
+}
+
 /* ==== MOBİL GÖRÜNÜM AYARLARI ==== */
 @media screen and (max-width: 768px) {
   /* Navbar */
@@ -1444,24 +1457,494 @@ body[data-theme="dark"] .floating-dock {
     max-height: 3500px !important;
     padding-bottom: 40px;
   }
-}
-
-/* === UÇAN BİLETLERİN BAŞLIĞI === */
-.tickets-title {
-  font-family: "Playfair Display", serif;
-  color: var(--accent-color);
-  font-size: 2.2rem;
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 30px;
-  text-shadow: 0 4px 15px var(--card-shadow);
-  width: 100%;
-}
-
-@media screen and (max-width: 768px) {
   .tickets-title {
     font-size: 1.6rem;
     margin-bottom: 20px;
     padding: 0 15px;
   }
+}
+
+/* =========================================
+   SİNEMATİK SAHNE (KARAOKE MANTIĞI VE TEMEL AYARLAR)
+========================================= */
+.cinematic-section {
+  height: 600vh;
+  background-color: #020202;
+  position: relative;
+  z-index: 10;
+}
+
+.cinematic-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #0f1115 0%, #000000 70%);
+  transition: background 2s ease;
+}
+
+.dust-particles-bg {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px
+  );
+  background-size: 50px 50px;
+  opacity: 0.5;
+  animation: drift 30s linear infinite;
+  transition: opacity 2s ease;
+}
+@keyframes drift {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    transform: translateY(-100px) scale(1.1);
+  }
+}
+
+.cine-lyrics-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+/* Diyalog Tasarımı */
+.cine-dialog {
+  position: absolute;
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(1.2rem, 4vw, 2rem);
+  color: #d1d5db;
+  font-style: italic;
+  font-weight: 300;
+  max-width: 80%;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+}
+.cine-dialog.left {
+  left: 10%;
+  text-align: left;
+}
+.cine-dialog.right {
+  right: 10%;
+  text-align: right;
+  color: var(--accent-color);
+  font-weight: 500;
+}
+
+/* Şarkı Sözü Tasarımı */
+.cine-lyric {
+  position: absolute;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 700;
+  color: #ffffff;
+  text-align: center;
+  width: 90%;
+  opacity: 0;
+  transform: scale(0.9) translateY(20px);
+  filter: blur(8px);
+  transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Senkronizasyon (Görünür Olma) Durumu */
+.show-lyric {
+  opacity: 1 !important;
+  transform: scale(1) translateY(0) !important;
+  filter: blur(0px) !important;
+  text-shadow:
+    0 0 30px rgba(212, 175, 55, 0.4),
+    0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* "Karardı ay." Tasarımı */
+.cine-lyric.final-lyric {
+  color: #db2777;
+}
+.cine-lyric.final-lyric.show-lyric {
+  text-shadow:
+    0 0 40px rgba(219, 39, 119, 0.5),
+    0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.cine-audio-warning {
+  position: absolute;
+  bottom: 15%;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.5s;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 20;
+}
+
+/* =========================================
+   TİYATRO MODU (NAVBAR VE SCROLL KİLİDİ - YENİ EKLENTİ)
+========================================= */
+body.scroll-locked {
+  overflow: hidden !important; /* Sahne başlayınca kaydırmayı kilitler */
+}
+
+/* Sitenin tamamını kaplayacak sinematik kilit modu */
+.cinematic-locked {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 999999 !important; /* HER ŞEYİN ÜSTÜNDE */
+  overflow: hidden !important;
+  background-color: #000000 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.cinematic-section.cinematic-locked {
+  height: 100vh !important;
+}
+
+.cinematic-locked .cinematic-sticky {
+  height: 100vh !important;
+  background: radial-gradient(
+    circle at center,
+    #0f1115 0%,
+    #000000 70%
+  ) !important;
+}
+
+/* Navbar tiyatro moduna geçince normal menü gizlenir */
+.theater-mode-active #navbarBrandLogo,
+.theater-mode-active #navbarButtonsGroup,
+.theater-mode-active #navbarNav {
+  display: none !important;
+}
+.theater-mode-active {
+  background: rgba(0, 0, 0, 0.95) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  justify-content: center !important;
+}
+
+.theater-mode-active #theaterNavbarText {
+  display: block !important;
+}
+
+.theater-brand {
+  font-family: "Playfair Display", serif;
+  font-size: 1.5rem;
+  color: #d1d5db;
+  font-style: italic;
+  text-align: center;
+  width: 100%;
+  animation: fadeIn 1.5s ease-in-out;
+  letter-spacing: 1px;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* EKLENDİ: Kalp Ve Ok Kapsayıcısı - Fiziksel Olarak Aşağı Alındı */
+#heartBreakWrapper {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+}
+
+/* =========================================
+   OK SAPLANAN VE KIRILAN KALP EFEKTİ
+========================================= */
+.cinematic-heart-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 10;
+}
+.show-lyric .cinematic-heart-container {
+  opacity: 1;
+}
+
+.cinematic-main-heart {
+  font-size: 7rem;
+  color: #db2777;
+  text-shadow: 0 0 30px rgba(219, 39, 119, 0.8);
+  position: relative;
+  z-index: 2;
+}
+
+.cinematic-arrow {
+  position: absolute;
+  left: -50vw; /* Ekranın çok solundan başlar */
+  width: 150px;
+  height: 6px;
+  background: #ffffff;
+  border-radius: 3px;
+  box-shadow: 0 0 15px #ffffff;
+  z-index: 3;
+  opacity: 0;
+}
+/* Okun Ucu */
+.cinematic-arrow::after {
+  content: "";
+  position: absolute;
+  right: -15px;
+  top: -7px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 18px solid #ffffff;
+}
+
+/* JS ile show-lyric class'ı eklendiğinde çalışan animasyonlar */
+.show-lyric .cinematic-arrow {
+  animation: shootArrow 0.3s 0.5s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+}
+@keyframes shootArrow {
+  0% {
+    left: -50vw;
+    opacity: 1;
+  }
+  100% {
+    left: -50px;
+    opacity: 1;
+  } /* Kalbin tam ortasında durur */
+}
+
+.show-lyric .cinematic-main-heart {
+  /* Ok çarptıktan hemen sonra kalp kırılır ve solar */
+  animation: breakHeart 0.5s 0.8s forwards;
+}
+@keyframes breakHeart {
+  0% {
+    transform: scale(1);
+    filter: grayscale(0);
+  }
+  20% {
+    transform: scale(1.3);
+    filter: grayscale(0);
+  }
+  100% {
+    transform: scale(1.1) rotate(15deg);
+    filter: grayscale(1);
+    opacity: 0;
+    clip-path: polygon(0 0, 50% 0, 40% 50%, 60% 70%, 50% 100%, 0 100%);
+  }
+}
+
+/* =========================================
+   YILDIZLAR VE DAKTİLO EFEKTİ
+========================================= */
+#typingYildizlar {
+  display: inline-block;
+  border-right: 3px solid #ffffff;
+  padding-right: 5px;
+  white-space: nowrap;
+  animation: blinkCursor 0.75s step-end infinite;
+}
+@keyframes blinkCursor {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #ffffff;
+  }
+}
+
+/* Arka planda kaçışan yıldızlar */
+#scaredStarsLayer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+}
+.fleeing-star {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 12px #ffffff;
+  /* Koordinatlar JavaScript'ten --tx ve --ty olarak gelecek */
+  animation: flee 1s forwards cubic-bezier(0.25, 1, 0.5, 1);
+}
+@keyframes flee {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0);
+    opacity: 0;
+  }
+}
+
+/* DEĞİŞTİR: EFSANE DOLUNAY ANİMASYONU */
+#moonAnimationContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+#moonAnimationContainer.show-lyric {
+  opacity: 1;
+}
+#cinematicMoon {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    #ffffff 0%,
+    #d1d5db 50%,
+    #9ca3af 100%
+  );
+  box-shadow:
+    0 0 80px 20px rgba(255, 255, 255, 0.6),
+    inset -20px -20px 40px rgba(0, 0, 0, 0.5);
+  transform: scale(0.5);
+  transition: all 1s ease-out;
+}
+.show-lyric #cinematicMoon {
+  transform: scale(1);
+}
+
+.moon-darken {
+  filter: brightness(0.2) grayscale(1) !important; /* Kusursuz kararma */
+  box-shadow:
+    0 0 10px rgba(0, 0, 0, 0.9),
+    inset -30px -30px 60px rgba(0, 0, 0, 0.9) !important;
+  transition: all 2.5s ease-in-out !important;
+}
+.moon-shatter {
+  animation: shatterMoon 0.8s forwards ease-in !important;
+}
+
+@keyframes shatterMoon {
+  0% {
+    transform: scale(1);
+    filter: brightness(0.2) grayscale(1);
+    opacity: 1;
+  }
+  30% {
+    transform: scale(1.1);
+    filter: brightness(2) contrast(2);
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+    filter: blur(20px);
+  }
+}
+
+/* =========================================
+   3 TIK İLE SAHNEYİ TETİKLEYEN KALP (SÜRPRİZ)
+========================================= */
+.custom-egg-footer {
+  position: relative;
+  display: inline-block;
+}
+.easter-egg-heart-wrapper {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  padding: 5px;
+}
+#secretTriggerHeart {
+  animation: pulse-heart 1.5s infinite;
+  transition: transform 0.3s ease;
+  user-select: none;
+}
+#secretTriggerHeart:hover {
+  transform: scale(1.3);
+}
+@keyframes pulse-heart {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+/* Sürpriz İpucu Balonu */
+.easter-egg-heart-wrapper::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.5);
+  background: var(--text-main);
+  color: var(--primary-bg);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  box-shadow: 0 4px 10px var(--card-shadow);
+}
+/* Küçük bir ok */
+.easter-egg-heart-wrapper::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: var(--text-main) transparent transparent transparent;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+.easter-egg-heart-wrapper:hover::after,
+.easter-egg-heart-wrapper:hover::before,
+.easter-egg-heart-wrapper:active::after,
+.easter-egg-heart-wrapper:active::before {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
+}
+
+/* EKLENDİ: Merkezleme Koruyucusu (Ok ve Ayın Kaymasını Önler) */
+#heartBreakWrapper.show-lyric,
+#moonAnimationContainer.show-lyric {
+  transform: translate(-50%, -50%) scale(1) !important;
 }
