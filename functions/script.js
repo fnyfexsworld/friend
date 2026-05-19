@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     themeIcon.className = "fa-solid fa-moon";
   }
 
-  // ==== MÜZİK ÇALAR (MOBİL YÜKLENİYOR ANİMASYONLU) ====
+  // ==== MÜZİK ÇALAR (KESİN ÇÖZÜM - 2:14'TEN BAŞLAYAN) ====
   const bgMusic = document.getElementById("bgMusic");
   const musicToggleBtn = document.getElementById("musicToggleBtn");
   const musicIcon = document.getElementById("musicIcon");
@@ -16,43 +16,45 @@ document.addEventListener("DOMContentLoaded", () => {
   let isFirstPlay = true;
 
   if (musicToggleBtn) {
+    if (bgMusic) bgMusic.preload = "auto";
+
     musicToggleBtn.addEventListener("click", () => {
-      if (!bgMusic) return;
+      if (!bgMusic) {
+        console.error("Müzik dosyası HTML içinde bulunamadı!");
+        return;
+      }
 
       if (isPlaying) {
         bgMusic.pause();
-        if (musicIcon) musicIcon.className = "fa-solid fa-play";
+        if (musicIcon) {
+          musicIcon.classList.remove("fa-pause");
+          musicIcon.classList.add("fa-play");
+        }
         isPlaying = false;
       } else {
-        // MÜZİK YÜKLENİRKEN DÖNEN YÜKLENİYOR İKONU ÇIKAR
-        if (musicIcon) musicIcon.className = "fa-solid fa-spinner fa-spin";
+        let playPromise = bgMusic.play();
 
-        if (isFirstPlay) {
-          // Mobil engellemesini aşmak için sesi 1 saliseliğine kısıp başlatıyoruz
-          bgMusic.muted = true; 
-          bgMusic.play().then(() => {
-            bgMusic.currentTime = 180; // 134. Saniyeye Atla
-            bgMusic.muted = false; // Sesi geri aç
-            
-            // Yüklendiğinde ikonu Duraklat (Pause) yap
-            if (musicIcon) musicIcon.className = "fa-solid fa-pause";
-            isPlaying = true;
-            isFirstPlay = false;
-          }).catch((err) => {
-            if (musicIcon) musicIcon.className = "fa-solid fa-play";
-            console.log(err);
-          });
-        } else {
-          // İlk çalma değilse normal devam et
-          bgMusic.play().then(() => {
-            if (musicIcon) musicIcon.className = "fa-solid fa-pause";
-            isPlaying = true;
-          });
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              if (isFirstPlay) {
+                bgMusic.currentTime = 180; // 2 dakika 14 saniye (120+14) -> İsteğin üzerine 180 saniye olarak ayarlıydı
+                isFirstPlay = false;
+              }
+            })
+            .catch((error) => {
+              console.log("Tarayıcı oynatmayı engelledi:", error);
+            });
         }
+
+        if (musicIcon) {
+          musicIcon.classList.remove("fa-play");
+          musicIcon.classList.add("fa-pause");
+        }
+        isPlaying = true;
       }
     });
   }
-
 
   // ==== DAKTİLO EFEKTİ ====
   const subtitleContainer = document.getElementById("typewriter-text");
@@ -168,7 +170,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const scrollDownBtn = document.getElementById("scrollDownBtn");
   let isAtBottom = false;
 
+  // Otomatik Tetikleyici (Scroll Biletleri Geçince / Sayfa Sonuna Gelince)
+  // YENİ: SAYFA SONU SWAL UYARISI (Otomatik başlatma tamamen iptal edildi!)
+  let bottomTimer = null;
   window.addEventListener("scroll", () => {
+    // Timeline progres çubuğu vb kodları korumak için...
     if (timelineCore && timelineProgress) {
       const rect = timelineCore.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
@@ -182,7 +188,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const scrollPosition = window.innerHeight + window.scrollY;
       const threshold = document.documentElement.scrollHeight - 50;
       const icon = scrollDownBtn.querySelector("i");
-
       if (scrollPosition >= threshold) {
         isAtBottom = true;
         icon.classList.remove("fa-chevron-down");
@@ -193,8 +198,33 @@ document.addEventListener("DOMContentLoaded", () => {
         icon.classList.add("fa-chevron-down");
       }
     }
-  });
 
+    // YENİ: Alta gelip 5 saniye bekleyene uyarı
+    const scrollPosition = window.innerHeight + window.scrollY;
+    const pageHeight = document.documentElement.scrollHeight;
+    const isAtAbsoluteBottom = scrollPosition >= pageHeight - 50;
+
+    if (isAtAbsoluteBottom && !isTheaterMode) {
+      if (!bottomTimer) {
+        bottomTimer = setTimeout(() => {
+          if (typeof Swal !== "undefined") {
+            Swal.fire({
+              title: "Bir Sır Var...",
+              text: "En alttaki kalbe 3 kere tıklamayı denedin mi?",
+              icon: "info",
+              confirmButtonText: "Hemen Deneyeyim!",
+              confirmButtonColor: "#db2777",
+            });
+          }
+        }, 5000); // 5 Saniye Beklerse
+      }
+    } else {
+      if (bottomTimer) {
+        clearTimeout(bottomTimer);
+        bottomTimer = null;
+      }
+    }
+  });
   if (scrollDownBtn) {
     scrollDownBtn.addEventListener("click", () => {
       if (isAtBottom) {
@@ -206,7 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ==== TEMA GEÇİŞİ ====
-  const themes = ["pink", "", "light"]; // Pink'ten başlar
+  const themes = ["pink", "", "light"];
   let currentThemeIndex = 0;
   const themeBtn = document.getElementById("themeToggleBtn");
 
@@ -267,7 +297,6 @@ document.addEventListener("DOMContentLoaded", () => {
       tap: false,
     });
 
-    // Haritayı verilen rotaya göre ekrana otomatik ve kusursuz sığdırır
     map.fitBounds(L.latLngBounds(routeKirmizi), {
       padding: isMobile ? [30, 30] : [50, 50],
     });
@@ -276,14 +305,6 @@ document.addEventListener("DOMContentLoaded", () => {
       "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
       { maxZoom: 19 },
     ).addTo(map);
-
-    map.dragging.disable();
-    map.touchZoom.disable();
-    map.doubleClickZoom.disable();
-    map.scrollWheelZoom.disable();
-    map.boxZoom.disable();
-    map.keyboard.disable();
-    if (map.tap) map.tap.disable();
 
     L.circleMarker(routeKirmizi[0], {
       color: "#dc3545",
@@ -297,6 +318,7 @@ document.addEventListener("DOMContentLoaded", () => {
         direction: "left",
         className: "fw-bold",
       });
+
     L.circleMarker(routeKirmizi[routeKirmizi.length - 1], {
       color: "#0d6efd",
       fillColor: "#0d6efd",
@@ -312,12 +334,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let totalDist = 0;
     let routeData = [];
+    routeData.push({ latLng: routeKirmizi[0], pct: 0 });
+    let currentDist = 0;
+
     for (let i = 0; i < routeKirmizi.length - 1; i++) {
       totalDist += map.distance(routeKirmizi[i], routeKirmizi[i + 1]);
     }
 
-    let currentDist = 0;
-    routeData.push({ latLng: routeKirmizi[0], pct: 0 });
     for (let i = 0; i < routeKirmizi.length - 1; i++) {
       currentDist += map.distance(routeKirmizi[i], routeKirmizi[i + 1]);
       routeData.push({
@@ -608,9 +631,7 @@ document.addEventListener("DOMContentLoaded", () => {
       snowflake.style.height = `${size}px`;
       snowflake.style.left = `${left}px`;
       snowflake.style.transition = `top ${duration}s linear, opacity ${duration}s ease-in-out`;
-      if (snowContainer) {
-        snowContainer.appendChild(snowflake);
-      }
+      if (snowContainer) snowContainer.appendChild(snowflake);
 
       setTimeout(() => {
         snowflake.style.top = "190px";
@@ -627,7 +648,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const driveIcon = document.getElementById("driveIcon");
   const nightOverlay = document.getElementById("nightOverlay");
 
-  // GPS haritasını sadece 1 kez yüklemek için takip değişkenleri
   let gpsMapInitialized = false;
   let gpsMap = null;
   let gpsRoute = null;
@@ -650,7 +670,6 @@ document.addEventListener("DOMContentLoaded", () => {
     steeringWheel.innerHTML =
       '<div class="scania-spoke spoke-left"></div><div class="scania-spoke spoke-right"></div><div class="scania-spoke spoke-bottom"></div><div class="scania-wheel-hub"></div>';
 
-    // GPS EKRANI (Burası Leaflet için ID aldı)
     const centerConsole = document.createElement("div");
     centerConsole.className = "scania-center-console";
     centerConsole.innerHTML =
@@ -664,7 +683,6 @@ document.addEventListener("DOMContentLoaded", () => {
     dashboard.appendChild(steeringWheel);
     dashboard.appendChild(centerConsole);
 
-    // İnce Belli Çay Bardağı
     const teaGlass = document.createElement("div");
     teaGlass.className = "turkish-tea-glass";
     teaGlass.innerHTML =
@@ -694,12 +712,9 @@ document.addEventListener("DOMContentLoaded", () => {
         driveIcon.style.color = "#ff8c00";
         driveIcon.style.borderColor = "#ff8c00";
 
-        // Gece moduna geçildiğinde animasyonun bitmesini bekleyip GPS haritasını yükle
         setTimeout(() => {
           if (!gpsMapInitialized && typeof L !== "undefined") {
             gpsMapInitialized = true;
-
-            // Etkileşimi kapalı, sadece görsel bir GPS haritası
             gpsMap = L.map("gpsMapScreen", {
               zoomControl: false,
               dragging: false,
@@ -709,16 +724,14 @@ document.addEventListener("DOMContentLoaded", () => {
               boxZoom: false,
               keyboard: false,
               tap: false,
-              attributionControl: false, // Sağ alttaki leaflet yazısını kaldırır
+              attributionControl: false,
             });
 
-            // Karanlık tema altlığı (CartoDB Dark Matter)
             L.tileLayer(
               "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
               { maxZoom: 19 },
             ).addTo(gpsMap);
 
-            // Rota Çizgisi (Neon Camgöbeği)
             gpsRoute = L.polyline(routeKirmizi, {
               color: "#00ffff",
               weight: 4,
@@ -726,14 +739,12 @@ document.addEventListener("DOMContentLoaded", () => {
               shadowBlur: 10,
             }).addTo(gpsMap);
 
-            // Haritayı ekrana tam sığdır
             gpsMap.fitBounds(gpsRoute.getBounds(), { padding: [10, 10] });
           } else if (gpsMap) {
-            // Harita zaten yüklüyse boyutunu tazeleyip ortala
             gpsMap.invalidateSize();
             gpsMap.fitBounds(gpsRoute.getBounds(), { padding: [10, 10] });
           }
-        }, 800); // Overlay'in CSS ile ekrana geliş süresini bekler
+        }, 800);
       } else {
         driveIcon.style.color = "";
         driveIcon.style.borderColor = "";
@@ -759,7 +770,6 @@ document.addEventListener("DOMContentLoaded", () => {
             block: "center",
           });
         }
-
         setTimeout(() => {
           flyingTicketsWrapper.classList.remove("revealed");
         }, 200);
@@ -771,7 +781,6 @@ document.addEventListener("DOMContentLoaded", () => {
         peekTicket.setAttribute("data-tooltip", "AŞTİ Biletleri");
       } else {
         flyingTicketsWrapper.classList.add("revealed");
-
         setTimeout(() => {
           flyingTicketsWrapper.scrollIntoView({
             behavior: "smooth",
@@ -784,6 +793,236 @@ document.addEventListener("DOMContentLoaded", () => {
           ticketIcon.classList.add("fa-xmark");
         }
         peekTicket.setAttribute("data-tooltip", "Biletleri Gizle");
+      }
+    });
+  }
+
+  // ==========================================
+  // 4. SİNEMATİK SAHNE (TİYATRO MODU VE KARAOKE)
+  // ==========================================
+  const cinematicSection = document.getElementById("cinematicSection");
+  const cineAudio = document.getElementById("cineAudio");
+  const syncElements = document.querySelectorAll(".cine-sync");
+  const cineAudioWarning = document.getElementById("cineAudioWarning");
+  const mainNavbar = document.getElementById("mainNavbar");
+
+  let cinePlayedOnce = false;
+  let isTheaterMode = false;
+  let yildizlarTyped = false;
+  let moonDarkened = false;
+  let moonShattered = false;
+  let cineEndTimer = null;
+
+  // Scroll kilitleme & Navbar gizleme
+  function lockScrollForTheater() {
+    isTheaterMode = true;
+    document.body.classList.add("scroll-locked");
+    cinematicSection.classList.add("cinematic-locked");
+    mainNavbar.classList.add("theater-mode-active");
+    // Dokunmatik cihazlarda kaydırmayı tam engellemek için
+    document.addEventListener("touchmove", preventDefaultScroll, {
+      passive: false,
+    });
+    document.addEventListener("wheel", preventDefaultScroll, {
+      passive: false,
+    });
+  }
+
+  function unlockScrollForTheater() {
+    isTheaterMode = false;
+    document.body.classList.remove("scroll-locked");
+    cinematicSection.classList.remove("cinematic-locked");
+    cinematicSection.classList.add("d-none");
+    mainNavbar.classList.remove("theater-mode-active");
+
+    document.removeEventListener("touchmove", preventDefaultScroll);
+    document.removeEventListener("wheel", preventDefaultScroll);
+  }
+
+  function preventDefaultScroll(e) {
+    if (isTheaterMode) e.preventDefault();
+  }
+
+  // Tiyatroyu Başlat
+  function startCinematicScene() {
+    if (!cinematicSection || !cineAudio) return;
+
+    cinematicSection.classList.remove("d-none");
+    cinematicSection.scrollIntoView({ behavior: "instant", block: "start" });
+
+    lockScrollForTheater();
+
+    // Ana çalan müziği kapat (Sen Varsın Diye iptal olur)
+    if (bgMusic && isPlaying) {
+      bgMusic.pause();
+      if (musicIcon) {
+        musicIcon.classList.remove("fa-pause");
+        musicIcon.classList.add("fa-play");
+      }
+      isPlaying = false;
+    }
+
+    cineAudio.currentTime = 0;
+    let playPromise = cineAudio.play();
+
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          if (cineAudioWarning) cineAudioWarning.classList.add("d-none");
+        })
+        .catch((err) => {
+          // Otomatik çalamazsa ekranda uyarı çıkar
+          if (cineAudioWarning) {
+            cineAudioWarning.classList.remove("d-none");
+            cineAudioWarning.addEventListener(
+              "click",
+              () => {
+                cineAudio.play();
+                cineAudioWarning.classList.add("d-none");
+              },
+              { once: true },
+            );
+          }
+        });
+    }
+  }
+
+  // Sahneyi Bitirme
+  function endCinematicScene() {
+    cineAudio.pause();
+    unlockScrollForTheater();
+
+    // Her şeyi eski haline getir (3 Tık ile bir daha girilirse diye)
+    syncElements.forEach((el) => el.classList.remove("show-lyric"));
+    const moonEl = document.getElementById("cinematicMoon");
+    if (moonEl) moonEl.classList.remove("moon-darken", "moon-shatter");
+
+    const typingSpan = document.getElementById("typingYildizlar");
+    if (typingSpan) typingSpan.textContent = "";
+
+    const starsLayer = document.getElementById("scaredStarsLayer");
+    if (starsLayer) {
+      starsLayer.innerHTML = "";
+      starsLayer.classList.add("d-none");
+    }
+
+    yildizlarTyped = false;
+    moonDarkened = false;
+    moonShattered = false;
+  }
+
+  // Otomatik Tetikleyici (Scroll Biletleri Geçince)
+  window.addEventListener("scroll", () => {
+    if (!cinePlayedOnce && flyingTicketsWrapper) {
+      const rect = flyingTicketsWrapper.getBoundingClientRect();
+      // Biletler kısmı ekranın üst tarafına doğru kaybolmaya başladığında tetikle
+      if (rect.bottom < window.innerHeight * 0.2) {
+        cinePlayedOnce = true;
+        startCinematicScene();
+      }
+    }
+  });
+
+  // Yıldızların Daktilo ile Yazılması ve Kaçışması Animasyonu
+  function triggerYildizlarEffect() {
+    const text = "aaaaaaaaaar";
+    const typingSpan = document.getElementById("typingYildizlar");
+    const starsLayer = document.getElementById("scaredStarsLayer");
+    let i = 0;
+
+    starsLayer.classList.remove("d-none");
+
+    // Kaçışan Yıldızları Üret
+    for (let s = 0; s < 40; s++) {
+      let star = document.createElement("div");
+      star.className = "fleeing-star";
+      star.style.left = "50vw";
+      star.style.top = "50vh";
+
+      let angle = Math.random() * Math.PI * 2;
+      let distance = 300 + Math.random() * 600; // Ekrandan çıkacak kadar uzağa
+      let tx = Math.cos(angle) * distance + "px";
+      let ty = Math.sin(angle) * distance + "px";
+
+      star.style.setProperty("--tx", tx);
+      star.style.setProperty("--ty", ty);
+      starsLayer.appendChild(star);
+    }
+
+    // Daktilo efekti
+    function typeChar() {
+      if (i < text.length) {
+        typingSpan.textContent += text.charAt(i);
+        i++;
+        setTimeout(typeChar, 400);
+      }
+    }
+    typeChar();
+  }
+
+  // Şarkı Senkronu ve Özel Efekt Zamanlayıcıları
+  if (cineAudio) {
+    cineAudio.addEventListener("timeupdate", () => {
+      const time = cineAudio.currentTime;
+
+      syncElements.forEach((el) => {
+        const start = parseFloat(el.getAttribute("data-time"));
+        const end = parseFloat(el.getAttribute("data-end"));
+
+        if (time >= start && time < end) {
+          el.classList.add("show-lyric");
+
+          // Yıldız efekti
+          if (el.id === "lyricYildizlarContainer" && !yildizlarTyped) {
+            yildizlarTyped = true;
+            triggerYildizlarEffect();
+          }
+
+          // Kararan ve Çatlayan Ay Efekti
+          if (el.id === "moonAnimationContainer") {
+            const moonEl = document.getElementById("cinematicMoon");
+            // 45.0 saniyede kararır
+            if (time > 37.7 && !moonDarkened) {
+              moonDarkened = true;
+              moonEl.classList.add("moon-darken");
+            }
+            // 48.0 saniyede çatlar
+            if (time > 39.3 && !moonShattered) {
+              moonShattered = true;
+              moonEl.classList.add("moon-shatter");
+            }
+          }
+        } else {
+          el.classList.remove("show-lyric");
+        }
+      });
+
+      // 49.5 saniyede veya şarkı bittiğinde sahneyi kapat
+      if (time >= 49.5) {
+        endCinematicScene();
+      }
+    });
+
+    cineAudio.addEventListener("ended", endCinematicScene);
+  }
+
+  // ==== 5. SÜRPRİZ YUMURTA (EASTER EGG - 3 TIK) ====
+  const secretTriggerHeart = document.getElementById("secretTriggerHeart");
+  let heartClickCount = 0;
+  let heartClickTimer;
+
+  if (secretTriggerHeart) {
+    secretTriggerHeart.addEventListener("click", () => {
+      heartClickCount++;
+      clearTimeout(heartClickTimer);
+
+      if (heartClickCount >= 3) {
+        heartClickCount = 0; // Sayacı sıfırla
+        startCinematicScene(); // Tiyatroyu baştan başlat
+      } else {
+        heartClickTimer = setTimeout(() => {
+          heartClickCount = 0; // 2 saniye içinde ard arda tıklanmazsa sayacı sıfırla
+        }, 2000);
       }
     });
   }
