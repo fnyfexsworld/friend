@@ -34,17 +34,30 @@
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="functions/style.css" />
   </head>
 
   <body data-theme="pink">
-    <nav class="navbar navbar-expand-md fixed-top custom-navbar">
+    <nav
+      class="navbar navbar-expand-md fixed-top custom-navbar"
+      id="mainNavbar"
+    >
       <div
         class="container d-flex flex-wrap align-items-center justify-content-between"
       >
-        <a class="navbar-brand" href="#heroSection"> hoş geldin</a>
+        <a class="navbar-brand" href="#heroSection" id="navbarBrandLogo">
+          hoş geldin</a
+        >
+        <div id="theaterNavbarText" class="theater-brand d-none">
+          <br />
+          bu bizim tiyatromuz.
+        </div>
 
-        <div class="d-flex align-items-center gap-3 order-md-3 ms-md-4">
+        <div
+          class="d-flex align-items-center gap-3 order-md-3 ms-md-4"
+          id="navbarButtonsGroup"
+        >
           <button
             class="theme-toggle"
             style="margin: 0"
@@ -621,7 +634,8 @@
           </div>
           <p class="theme-text-muted mt-3 fw-medium text-center">
             İçindeki karları yağdırmak için küreye tıkla. Karanlık modda daha
-            iyi görünür!
+            iyi görünür! <br />
+            Bu arada, biletlere tıklasana!
           </p>
 
           <hr class="section-divider" />
@@ -778,15 +792,137 @@
         <hr class="section-divider" />
       </section>
 
+      <section class="cinematic-section d-none" id="cinematicSection">
+        <div class="cinematic-sticky">
+          <div class="dust-particles-bg" id="dustBg"></div>
+          <div id="scaredStarsLayer" class="d-none"></div>
+          <div id="cineAudioWarning" class="cine-audio-warning d-none">
+            <i class="fa-solid fa-headphones fa-bounce"></i> Sesi açmak ve
+            sahneyi başlatmak için dokun...
+          </div>
+
+          <div class="cine-lyrics-container" id="cineLyrics" style="opacity: 1">
+            <div
+              class="cine-dialog left cine-sync"
+              data-time="1.6"
+              data-end="2.6"
+            >
+              - çok mu seviyon lan beni?
+            </div>
+            <div
+              class="cine-dialog right cine-sync"
+              data-time="4.9"
+              data-end="6.1"
+            >
+              - çok seviyorum lan tabi.
+            </div>
+            <div
+              class="cine-dialog left cine-sync"
+              data-time="7.0"
+              data-end="9.5"
+            >
+              - çok seviyormuş...
+            </div>
+            <div
+              class="cine-dialog left cine-sync"
+              data-time="10.3"
+              data-end="13.1"
+            >
+              - ulan aynı yurtta tıkılıp kalmasak yüzümüze mi bakarsın sen
+              bizim?
+            </div>
+
+            <div
+              class="cine-lyric cine-sync"
+              data-time="13.1"
+              data-end="15.0"
+              style="top: 35%"
+            >
+              Ötesi mi var...
+            </div>
+            <div
+              id="heartBreakWrapper"
+              class="cine-sync"
+              data-time="13.4"
+              data-end="15.0"
+            >
+              <div class="cinematic-heart-container">
+                <i class="fa-solid fa-heart cinematic-main-heart"></i>
+                <div class="cinematic-arrow"></div>
+              </div>
+            </div>
+
+            <div class="cine-lyric cine-sync" data-time="15.2" data-end="18.0">
+              Yalnızlığı yalnız
+            </div>
+            <div class="cine-lyric cine-sync" data-time="18.6" data-end="22.2">
+              seninle aldattım
+            </div>
+            <div class="cine-lyric cine-sync" data-time="23.2" data-end="24.2">
+              Kıskandı
+            </div>
+
+            <div
+              class="cine-lyric cine-sync"
+              data-time="24.4"
+              data-end="28.4"
+              id="lyricYildizlarContainer"
+            >
+              Yıldızl<span id="typingYildizlar"></span>
+            </div>
+            r
+
+            <div class="cine-lyric cine-sync" data-time="29.5" data-end="32.8">
+              Aşka inanmayanlara
+            </div>
+            <div class="cine-lyric cine-sync" data-time="33.0" data-end="36.4">
+              seni anlattım
+            </div>
+            <div
+              class="cine-lyric final-lyric cine-sync"
+              data-time="37.7"
+              data-end="48.0"
+            >
+              Karardı ay.
+            </div>
+
+            <div
+              id="moonAnimationContainer"
+              class="cine-sync"
+              data-time="37.7"
+              data-end="42"
+            >
+              <div id="cinematicMoon"></div>
+            </div>
+          </div>
+
+          <audio id="cineAudio" preload="auto">
+            <source src="functions/sarki.mp3" type="audio/mpeg" />
+          </audio>
+        </div>
+      </section>
+
       <div
         class="container d-flex flex-column align-items-center justify-content-center text-center"
       >
         <h4 class="mb-3 text-center" style="color: var(--accent-color)">
-          İyi ki varsın, kardeşim benim.
+          İyi Ki Varsın, Kardeşim Benim.
+          <span
+            class="easter-egg-heart-wrapper"
+            data-tooltip="Bence 3 kere tıkla. :)"
+          >
+            <i
+              class="fa-solid fa-heart heart-icon ms-1"
+              id="secretTriggerHeart"
+            ></i>
+          </span>
         </h4>
-        <p class="theme-text-muted mb-0 fw-medium text-center">
-          Sevgiyle, Umut <i class="fa-solid fa-heart heart-icon ms-1"></i>
+        <p
+          class="theme-text-muted mb-0 fw-medium text-center custom-egg-footer"
+        >
+          Sevgiyle, Umut
         </p>
+        <br /><br /><br /><br />
       </div>
     </footer>
 
@@ -1430,7 +1566,7 @@
       />
     </audio>
 
-    <div class="floating-dock">
+    <div class="floating-dock" id="floatingDockMenu">
       <button id="peekTicket" class="dock-item" data-tooltip="AŞTİ Biletleri">
         <i class="fa-solid fa-ticket-simple"></i>
       </button>
